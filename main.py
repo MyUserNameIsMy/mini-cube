@@ -34,6 +34,7 @@ old_settings = set_terminal_raw()
 try:
     while True:
         key = get_pressed_key()
+        print(key)
         if key == 'w':
             motor1.move_forward()
         elif key == 's':
@@ -42,9 +43,11 @@ try:
             print("Quitting...")
             break
         elif key is not None:
-            motor1.stop_move()
+            pass
+            # motor1.stop_move()
         else:
-            motor1.stop_move()
+            pass
+            # motor1.stop_move()
         time.sleep(0.01)
 
 finally:

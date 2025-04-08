@@ -80,7 +80,7 @@ class MotorV1:
 
     def move_backward(self):
         self.DIRECTION = "CCW"
-        res, err = self.packetHandler.write2ByteTxRx(self.portHandler, self.ID, self.ADDR["MOVING_SPEED"], 1000)
+        res, err = self.packetHandler.write2ByteTxRx(self.portHandler, self.ID, self.ADDR["MOVING_SPEED"], 2000)
         print(f"move_backward -> result: {res}, error: {err}")
 
     def stop_move(self):

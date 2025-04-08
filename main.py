@@ -19,4 +19,5 @@ DEVICE_NAME = '/dev/ttyUSB0'
 
 motor1 = MotorV1(DEVICE_NAME, 1)
 motor1.enable_torque()
-motor1.set_mode('WHEEL_MODE')
+motor1.set_mode('MULTI_TURN_MODE')
+motor1.move_deg(10000)

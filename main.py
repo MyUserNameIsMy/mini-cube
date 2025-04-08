@@ -1,9 +1,9 @@
 import sys
-import termios
 import tty
-import time
+import termios
 import select
-from minicubebase import *  # your MotorV1 class
+import time
+from minicubebase import *  # Make sure this includes your MotorV1 class
 
 def get_key():
     if select.select([sys.stdin], [], [], 0.0)[0]:
@@ -19,15 +19,16 @@ def set_terminal_raw():
 def restore_terminal_settings(old_settings):
     termios.tcsetattr(sys.stdin.fileno(), termios.TCSADRAIN, old_settings)
 
+# === Motor Setup ===
 DEVICE_NAME = '/dev/ttyUSB0'
 motor1 = MotorV1(DEVICE_NAME, 1)
 motor1.enable_torque()
 motor1.set_mode('WHEEL_MODE')
 
-print("Hold [w] for forward, [s] for backward, [q] to quit.")
+print("🕹️  Use [w] to move forward, [s] to move backward, [q] to quit.")
 
+# === Input Loop ===
 old_settings = set_terminal_raw()
-
 try:
     while True:
         key = get_key()
@@ -38,7 +39,7 @@ try:
         elif key == 'q':
             print("Exiting...")
             break
-        else:
+        elif key is not None:
             motor1.stop_move()
 
         time.sleep(0.05)
@@ -48,3 +49,4 @@ finally:
     motor1.stop_move()
     motor1.disable_torque()
     motor1.portHandler.closePort()
+    print("Motor stopped and port closed.")

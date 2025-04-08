@@ -53,23 +53,23 @@ class MotorV1:
 
     def enable_torque(self):
         res, err = self.packetHandler.write1ByteTxRx(self.portHandler, self.ID, self.ADDR["TORQUE_ENABLE"], self.TORQUE_ENABLE)
-        pprint("enable_torque", res, err)
+        print(f"enable_torque -> result: {res}, error: {err}")
 
     def disable_torque(self):
         res, err = self.packetHandler.write1ByteTxRx(self.portHandler, self.ID, self.ADDR["TORQUE_ENABLE"], self.TORQUE_DISABLE)
-        pprint("disable_torque", res, err)
+        print(f"disable_torque -> result: {res}, error: {err}")
 
     def set_mode(self, mode):
         self.disable_torque()
         res, err = self.packetHandler.write2ByteTxRx(self.portHandler, self.ID, self.ADDR["CW"], self.MODES[mode]["CW"])
-        pprint("set_mode_cw", res, err)
+        print(f"set_mode_cw -> result: {res}, error: {err}")
         res, err = self.packetHandler.write2ByteTxRx(self.portHandler, self.ID, self.ADDR["CCW"], self.MODES[mode]["CCW"])
-        pprint("set_mode_ccw", res, err)
+        print(f"set_mode_ccw -> result: {res}, error: {err}")
         self.enable_torque()
 
     def move_deg(self, deg):
         res, err = self.packetHandler.write2ByteTxRx(self.portHandler, self.ID, self.ADDR["GOAL_POSITION"], deg)
-        pprint("move_deg", res, err)
+        print(f"move_deg -> result: {res}, error: {err}")
 
 
 

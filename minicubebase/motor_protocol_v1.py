@@ -1,5 +1,4 @@
 from dynamixel_sdk import *
-from pprint import pprint
 class MotorV1:
     def __init__(self, DEVICE_NAME, ID):
         self.ID = ID

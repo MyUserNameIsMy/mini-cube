@@ -3,7 +3,7 @@ import tty
 import termios
 import select
 import time
-from minicubebase import *  # This should contain your MotorV1 class
+from minicubebase import MotorV1, MotorV2  # Make sure both classes are defined in minicubebase
 
 def get_key():
     if select.select([sys.stdin], [], [], 0.0)[0]:
@@ -20,14 +20,17 @@ def restore_terminal_settings(old_settings):
     termios.tcsetattr(sys.stdin.fileno(), termios.TCSADRAIN, old_settings)
 
 # === Motor Setup ===
-DEVICE_NAME = '/dev/ttyUSB0'
-motor1 = MotorV1(DEVICE_NAME, 1)
-motor2 = MotorV1(DEVICE_NAME, 3)
+DEVICE_NAME = '/dev/ttyUSB0'  # Adjust if needed
 
-# Initialize both motors
-for motor in [motor1, motor2]:
-    motor.enable_torque()
-    motor.set_mode('WHEEL_MODE')
+motor1 = MotorV1(DEVICE_NAME, 1)  # V1 motor, ID 1
+motor2 = MotorV2(DEVICE_NAME, 3)  # V2 motor, ID 3
+
+# Init both motors
+motor1.enable_torque()
+motor1.set_mode('WHEEL_MODE')
+
+motor2.enable_torque()
+motor2.set_mode('VELOCITY_MODE')
 
 print("🕹️  Use [w] to move forward, [s] to move backward, [q] to quit.")
 
@@ -48,7 +51,6 @@ try:
         elif key is not None:
             motor1.stop_move()
             motor2.stop_move()
-
         time.sleep(0.05)
 
 finally:
@@ -57,5 +59,5 @@ finally:
     motor2.stop_move()
     motor1.disable_torque()
     motor2.disable_torque()
-    motor1.portHandler.closePort()
+    motor1.portHandler.closePort()  # Both use same port
     print("Motors stopped and port closed.")

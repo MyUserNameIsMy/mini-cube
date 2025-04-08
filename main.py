@@ -23,7 +23,7 @@ def restore_terminal_settings(old_settings):
 DEVICE_NAME = '/dev/ttyUSB0'  # Adjust if needed
 
 motor1 = MotorV1(DEVICE_NAME, 1)  # V1 motor, ID 1
-motor2 = MotorV2(DEVICE_NAME, 3)  # V2 motor, ID 3
+motor2 = MotorV2(DEVICE_NAME, 1)  # V2 motor, ID 3
 
 # Init both motors
 motor1.enable_torque()

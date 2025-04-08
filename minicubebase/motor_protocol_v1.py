@@ -6,6 +6,7 @@ class MotorV1:
         self.PROTOCOL_VERSION = 1.0
         self.BAUDRATE = 57600
 
+        self.DIRECTION = 'CW'
         self.portHandler = PortHandler(DEVICE_NAME)
         self.packetHandler = PacketHandler(self.PROTOCOL_VERSION)
 
@@ -15,6 +16,7 @@ class MotorV1:
             "PRESENT_POSITION": 36,
             "OPERATION_MODE": 1,
             "GOAL_VELOCITY": 1,
+            "MOVING_SPEED": 32,
             "CCW": 6,
             "CW": 8,
         }
@@ -71,7 +73,23 @@ class MotorV1:
         res, err = self.packetHandler.write2ByteTxRx(self.portHandler, self.ID, self.ADDR["GOAL_POSITION"], deg)
         print(f"move_deg -> result: {res}, error: {err}")
 
+    def move_forward(self):
+        self.DIRECTION = "CW"
+        res, err = self.packetHandler.write2ByteTxRx(self.portHandler, self.ID, self.ADDR["MOVING_SPEED"], 1000)
+        print(f"move_forward -> result: {res}, error: {err}")
 
+    def move_backward(self):
+        self.DIRECTION = "CCW"
+        res, err = self.packetHandler.write2ByteTxRx(self.portHandler, self.ID, self.ADDR["MOVING_SPEED"], 1000)
+        print(f"move_backward -> result: {res}, error: {err}")
+
+    def stop_move(self):
+        if self.DIRECTION == "CW":
+            value = 1024
+        else:
+            value = 0
+        res, err = self.packetHandler.write2ByteTxRx(self.portHandler, self.ID, self.ADDR["MOVING_SPEED"], value)
+        print(f"stop_move -> result: {res}, error: {err}")
 
 
 

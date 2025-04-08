@@ -44,7 +44,6 @@ print("    Use ↑ for servos 100°, ↓ for servos 0°")
 # Current motor selection
 selected = [motor1, motor2]
 
-
 # Key Input Functions
 def get_key():
     """Reads key including arrow keys."""
@@ -58,25 +57,21 @@ def get_key():
         return ch1
     return None
 
-
 def set_terminal_raw():
     fd = sys.stdin.fileno()
     old_settings = termios.tcgetattr(fd)
     tty.setcbreak(fd)
     return old_settings
 
-
 def restore_terminal_settings(old_settings):
     termios.tcsetattr(sys.stdin.fileno(), termios.TCSADRAIN, old_settings)
-
 
 # Servo Angle Function
 def set_angle(pwm, angle):
     duty_cycle = 2 + (angle / 18)  # Convert angle to duty cycle
     pwm.ChangeDutyCycle(duty_cycle)
-    time.sleep(0.5)
-    pwm.ChangeDutyCycle(0)
-
+    print(f"Setting servo to {angle}°")
+    # Don't stop PWM to keep the position until changed
 
 old_settings = set_terminal_raw()
 try:
@@ -89,14 +84,14 @@ try:
             set_angle(pwm1, 100)
             set_angle(pwm2, 100)
             time.sleep(3)
-            print("Setting servos to 100°")
+            print("Servos are holding at 100°")
         elif key == '\x1b[B':  # Down Arrow - Select motors 3 & 4
             selected = [motor3, motor4]
             print("↓ Selected motors 3 & 4")
             set_angle(pwm1, 0)
             set_angle(pwm2, 0)
             time.sleep(3)
-            print("Setting servos to 0°")
+            print("Servos are holding at 0°")
         elif key == 'w':  # Move motors forward
             selected[0].move_forward()
             selected[1].move_backward()

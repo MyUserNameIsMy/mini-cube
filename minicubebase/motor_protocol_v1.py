@@ -37,6 +37,20 @@ class MotorV1:
             }
         }
 
+        # Open the port
+        if not self.portHandler.openPort():
+            print("Failed to open the port!")
+            # Depending on your application, you might want to exit or handle this error.
+        else:
+            print("Port opened successfully.")
+
+        # Set the baudrate for the port
+        if not self.portHandler.setBaudRate(self.BAUDRATE):
+            print("Failed to set the baudrate!")
+        else:
+            print("Baudrate set successfully.")
+
+
     def enable_torque(self):
         res, err = self.packetHandler.write1ByteTxRx(self.portHandler, self.ID, self.ADDR["TORQUE_ENABLE"], self.TORQUE_ENABLE)
         pprint("enable_torque", res, err)

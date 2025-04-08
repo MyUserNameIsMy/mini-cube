@@ -86,9 +86,17 @@ try:
         if key == '\x1b[A':  # Up Arrow - Select motors 1 & 2
             selected = [motor1, motor2]
             print("↑ Selected motors 1 & 2")
+            set_angle(pwm1, 100)
+            set_angle(pwm2, 100)
+            time.sleep(3)
+            print("Setting servos to 100°")
         elif key == '\x1b[B':  # Down Arrow - Select motors 3 & 4
             selected = [motor3, motor4]
             print("↓ Selected motors 3 & 4")
+            set_angle(pwm1, 0)
+            set_angle(pwm2, 0)
+            time.sleep(3)
+            print("Setting servos to 0°")
         elif key == 'w':  # Move motors forward
             selected[0].move_forward()
             selected[1].move_backward()
@@ -98,17 +106,6 @@ try:
         elif key == 'q':  # Exit program
             print("Exiting...")
             break
-        elif key == '\x1b[A':  # Up Arrow - Set servos to 100°
-            print("Setting servos to 100°")
-            set_angle(pwm1, 100)
-            set_angle(pwm2, 100)
-            time.sleep(3)
-        elif key == '\x1b[B':  # Down Arrow - Set servos to 0°
-            print("Setting servos to 0°")
-            set_angle(pwm1, 0)
-            set_angle(pwm2, 0)
-            time.sleep(3)
-
         # Stop motors when no key is pressed
         elif key is not None:
             for m in selected:

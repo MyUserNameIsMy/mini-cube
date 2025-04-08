@@ -70,8 +70,8 @@ def restore_terminal_settings(old_settings):
 def set_angle(pwm, angle):
     duty_cycle = 2 + (angle / 18)  # Convert angle to duty cycle
     pwm.ChangeDutyCycle(duty_cycle)
-    print(f"Setting servo to {angle}°")
-    # Don't stop PWM to keep the position until changed
+    time.sleep(0.5)  # Allow the servo to reach the position
+    # Not stopping the PWM signal to keep the position
 
 old_settings = set_terminal_raw()
 try:
@@ -81,17 +81,17 @@ try:
         if key == '\x1b[A':  # Up Arrow - Select motors 1 & 2
             selected = [motor1, motor2]
             print("↑ Selected motors 1 & 2")
+            time.sleep(0.1)  # Short delay for stability
             set_angle(pwm1, 100)
             set_angle(pwm2, 100)
-            time.sleep(3)
-            print("Servos are holding at 100°")
+            print("Setting servos to 100°")
         elif key == '\x1b[B':  # Down Arrow - Select motors 3 & 4
             selected = [motor3, motor4]
             print("↓ Selected motors 3 & 4")
+            time.sleep(0.1)  # Short delay for stability
             set_angle(pwm1, 0)
             set_angle(pwm2, 0)
-            time.sleep(3)
-            print("Servos are holding at 0°")
+            print("Setting servos to 0°")
         elif key == 'w':  # Move motors forward
             selected[0].move_forward()
             selected[1].move_backward()

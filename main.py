@@ -1,15 +1,12 @@
-from dynamixel_sdk import *
-import os
 import sys
 import termios
 import tty
 import time
 import select
-from minicubebase import *
+from minicubebase import *  # your MotorV1 class
 
-def get_pressed_key(timeout=0.01):
-    dr, dw, de = select.select([sys.stdin], [], [], timeout)
-    if dr:
+def get_key():
+    if select.select([sys.stdin], [], [], 0.0)[0]:
         return sys.stdin.read(1)
     return None
 
@@ -27,28 +24,24 @@ motor1 = MotorV1(DEVICE_NAME, 1)
 motor1.enable_torque()
 motor1.set_mode('WHEEL_MODE')
 
-print("Hold [w] to move forward, [s] to move backward, [q] to quit.")
+print("Hold [w] for forward, [s] for backward, [q] to quit.")
 
 old_settings = set_terminal_raw()
 
 try:
     while True:
-        key = get_pressed_key()
-        print(key)
+        key = get_key()
         if key == 'w':
             motor1.move_forward()
         elif key == 's':
             motor1.move_backward()
         elif key == 'q':
-            print("Quitting...")
+            print("Exiting...")
             break
-        elif key is not None:
-            pass
-            # motor1.stop_move()
         else:
-            pass
-            # motor1.stop_move()
-        time.sleep(0.01)
+            motor1.stop_move()
+
+        time.sleep(0.05)
 
 finally:
     restore_terminal_settings(old_settings)

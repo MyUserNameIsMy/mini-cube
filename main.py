@@ -82,16 +82,16 @@ try:
             selected = [motor1, motor2]
             print("↑ Selected motors 1 & 2")
             time.sleep(0.1)  # Short delay for stability
-            set_angle(pwm1, 100)
-            # set_angle(pwm2, 100)
-            # print("Setting servos to 100°")
+            set_angle(pwm1, 78)
+            set_angle(pwm2, 78)
+            print("Setting servos to 78°")
         elif key == '\x1b[B':  # Down Arrow - Select motors 3 & 4
             selected = [motor3, motor4]
             print("↓ Selected motors 3 & 4")
             time.sleep(0.1)  # Short delay for stability
             set_angle(pwm1, 0)
-            # set_angle(pwm2, 0)
-            # print("Setting servos to 0°")
+            set_angle(pwm2, 0)
+            print("Setting servos to 0°")
         elif key == 'w':  # Move motors forward
             selected[0].move_forward()
             selected[1].move_backward()

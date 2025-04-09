@@ -19,19 +19,20 @@ pwm2 = GPIO.PWM(SERVO_PINS[1], 50)
 pwm1.start(0)
 pwm2.start(0)
 
-# Shared angle and control flags for servo
-servo_angle = 0
+# === Shared angles and control flags ===
+servo1_angle = 0
+servo2_angle = 0
 servo_running = True
 servo_lock = threading.Lock()
 
-# Servo angle update loop
-def set_angle_loop(pwm):
+# === Threaded angle update loops ===
+def set_angle_loop(pwm, get_angle_func):
     while servo_running:
         with servo_lock:
-            angle = servo_angle
+            angle = get_angle_func()
         duty_cycle = 2 + (angle / 18)
         pwm.ChangeDutyCycle(duty_cycle)
-        time.sleep(0.1)  # Refresh PWM signal
+        time.sleep(0.1)
 
 # === Motor Setup ===
 DEVICE_NAME = '/dev/ttyUSB0'
@@ -51,12 +52,12 @@ motor4.set_mode('VELOCITY_MODE')
 
 print("🕹️  Arrow ↑ selects motors 1 & 2 | ↓ selects motors 3 & 4")
 print("    Use [w] = forward | [s] = backward | [q] = quit")
-print("    Use ↑ for servos 100°, ↓ for servos 0°")
+print("    Use ↑ for servos 80° & 78°, ↓ for servos 0°")
 
-# Motor selection
+# === Motor selection ===
 selected = [motor1, motor2]
 
-# Key Input Functions
+# === Terminal key handling ===
 def get_key():
     if select.select([sys.stdin], [], [], 0.0)[0]:
         ch1 = sys.stdin.read(1)
@@ -77,10 +78,16 @@ def set_terminal_raw():
 def restore_terminal_settings(old_settings):
     termios.tcsetattr(sys.stdin.fileno(), termios.TCSADRAIN, old_settings)
 
-# Start thread to keep servo angle signal alive
-servo_thread = threading.Thread(target=set_angle_loop, args=(pwm1,))
-servo_thread.daemon = True
-servo_thread.start()
+# === Start PWM threads ===
+def get_servo1_angle(): return servo1_angle
+def get_servo2_angle(): return servo2_angle
+
+servo_thread_1 = threading.Thread(target=set_angle_loop, args=(pwm1, get_servo1_angle))
+servo_thread_2 = threading.Thread(target=set_angle_loop, args=(pwm2, get_servo2_angle))
+servo_thread_1.daemon = True
+servo_thread_2.daemon = True
+servo_thread_1.start()
+servo_thread_2.start()
 
 old_settings = set_terminal_raw()
 try:
@@ -91,14 +98,16 @@ try:
             selected = [motor1, motor2]
             print("↑ Selected motors 1 & 2")
             with servo_lock:
-                servo_angle = 80
-            print("Setting servos to 78°")
+                servo1_angle = 80
+                servo2_angle = 78
+            print("Setting servos: pwm1 → 80°, pwm2 → 78°")
         elif key == '\x1b[B':  # Down Arrow - Select motors 3 & 4
             selected = [motor3, motor4]
             print("↓ Selected motors 3 & 4")
             with servo_lock:
-                servo_angle = 0
-            print("Setting servos to 0°")
+                servo1_angle = 0
+                servo2_angle = 0
+            print("Setting servos: pwm1 → 0°, pwm2 → 0°")
         elif key == 'w':
             selected[0].move_forward()
             selected[1].move_backward()
@@ -116,7 +125,8 @@ try:
 finally:
     restore_terminal_settings(old_settings)
     servo_running = False
-    servo_thread.join()
+    servo_thread_1.join()
+    servo_thread_2.join()
     for m in [motor1, motor2, motor3, motor4]:
         m.stop_move()
         m.disable_torque()

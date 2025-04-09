@@ -70,8 +70,8 @@ def restore_terminal_settings(old_settings):
 def set_angle(pwm, angle):
     duty_cycle = 2 + (angle / 18)  # Convert angle to duty cycle
     pwm.ChangeDutyCycle(duty_cycle)
-    time.sleep(0.5)  # Allow the servo to reach the position
-    # Not stopping the PWM signal to keep the position
+    time.sleep(0.5)
+    pwm.ChangeDutyCycle(0)
 
 old_settings = set_terminal_raw()
 try:

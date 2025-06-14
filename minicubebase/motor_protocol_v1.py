@@ -82,6 +82,9 @@ class MotorV1:
         res, err = self.packetHandler.write2ByteTxRx(self.portHandler, self.ID, self.ADDR["MOVING_SPEED"], 2000)
         print(f"move_backward -> result: {res}, error: {err}")
 
+    def set_baudrate(self, baudrate):
+        self.BAUDRATE = baudrate
+
     def stop_move(self):
         if self.DIRECTION == "CW":
             value = 1024

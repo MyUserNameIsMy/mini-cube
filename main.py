@@ -98,9 +98,9 @@ try:
             selected = [motor1, motor2]
             print("↑ Selected motors 1 & 2")
             with servo_lock:
-                servo1_angle = 80
-                servo2_angle = 78
-            print("Setting servos: pwm1 → 80°, pwm2 → 78°")
+                servo1_angle = 95
+                servo2_angle = 110
+            print("Setting servos: pwm1 → 90°, pwm2 → 90°")
         elif key == '\x1b[B':  # Down Arrow - Select motors 3 & 4
             selected = [motor3, motor4]
             print("↓ Selected motors 3 & 4")

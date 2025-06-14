@@ -112,10 +112,7 @@ try:
                 servo1_angle = 0
                 servo2_angle = 0
             print("Setting servos: pwm1 → 0°, pwm2 → 0°")
-        elif key == 'u':
-            motor1_z.move_forward()
-        elif key == 'd':
-            motor1_z.move_backward()
+
         elif key == 'w':
             selected[0].move_forward()
             selected[1].move_backward()

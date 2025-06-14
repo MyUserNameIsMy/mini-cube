@@ -52,7 +52,7 @@ motor1_y.set_mode('WHEEL_MODE')
 motor2_x.set_mode('VELOCITY_MODE')
 motor2_y.set_mode('VELOCITY_MODE')
 
-motor1_z.set_mode('VELOCITY_MODE')
+motor1_z.set_mode('WHEEL_MODE')
 
 print("🕹️  Arrow ↑ selects motors 1 & 2 | ↓ selects motors 3 & 4")
 print("    Use [w] = forward | [s] = backward | [q] = quit")

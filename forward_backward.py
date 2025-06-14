@@ -126,6 +126,7 @@ try:
             print("Exiting...")
             break
         elif key is not None:
+            motor1_z.stop_move()
             for m in selected:
                 m.stop_move()
         time.sleep(0.05)

@@ -41,9 +41,9 @@ motor1_x = MotorV1(DEVICE_NAME, 1)
 motor2_x = MotorV2(DEVICE_NAME, 1)
 motor1_y = MotorV1(DEVICE_NAME, 3)
 motor2_y = MotorV2(DEVICE_NAME, 2)
-motor1_z = MotorV1(DEVICE_NAME, 4)
-motor1_z.set_baudrate(9600)
-motors = [motor1_x, motor1_y, motor2_x, motor2_y, motor1_z];
+motor1_z = MotorV1(DEVICE_NAME, 4, 9600)
+
+motors = [motor1_x, motor1_y, motor2_x, motor2_y, motor1_z]
 for m in motors:
     m.enable_torque()
 

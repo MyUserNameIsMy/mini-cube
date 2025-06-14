@@ -1,9 +1,9 @@
 from dynamixel_sdk import *
 class MotorV1:
-    def __init__(self, DEVICE_NAME, ID):
+    def __init__(self, DEVICE_NAME, ID, BAUDRATE=57600):
         self.ID = ID
         self.PROTOCOL_VERSION = 1.0
-        self.BAUDRATE = 57600
+        self.BAUDRATE = BAUDRATE
 
         self.DIRECTION = 'CW'
         self.portHandler = PortHandler(DEVICE_NAME)
@@ -82,8 +82,6 @@ class MotorV1:
         res, err = self.packetHandler.write2ByteTxRx(self.portHandler, self.ID, self.ADDR["MOVING_SPEED"], 2000)
         print(f"move_backward -> result: {res}, error: {err}")
 
-    def set_baudrate(self, baudrate):
-        self.BAUDRATE = baudrate
 
     def stop_move(self):
         if self.DIRECTION == "CW":

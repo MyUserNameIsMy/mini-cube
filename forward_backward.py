@@ -37,29 +37,27 @@ def set_angle_loop(pwm, get_angle_func):
 # === Motor Setup ===
 DEVICE_NAME = '/dev/ttyUSB0'
 
+motor1_z = MotorV1(DEVICE_NAME, 4)
 motor1_x = MotorV1(DEVICE_NAME, 1)
 motor2_x = MotorV2(DEVICE_NAME, 1)
 motor1_y = MotorV1(DEVICE_NAME, 3)
 motor2_y = MotorV2(DEVICE_NAME, 2)
-motor1_z = MotorV1(DEVICE_NAME, 4)
-motor1_z.set_baudrate(9600)
-motors = [motor1_x, motor1_y, motor2_x, motor2_y, motor1_z];
+
+
+motors = [motor1_z, motor1_x, motor1_y, motor2_x, motor2_y]
 for m in motors:
     m.enable_torque()
 
-motor1_x.set_mode('WHEEL_MODE')
-motor1_y.set_mode('WHEEL_MODE')
-motor2_x.set_mode('VELOCITY_MODE')
-motor2_y.set_mode('VELOCITY_MODE')
+motor1_x.set_mode('MULTI_TURN_MODE')
+motor1_y.set_mode('MULTI_TURN_MODE')
+motor2_x.set_mode('EXTENDED_POSITION_MODE')
+motor2_y.set_mode('EXTENDED_POSITION_MODE')
 
-motor1_z.set_mode('VELOCITY_MODE')
+motor1_z.set_mode('MULTI_TURN_MODE')
 
 print("🕹️  Arrow ↑ selects motors 1 & 2 | ↓ selects motors 3 & 4")
 print("    Use [w] = forward | [s] = backward | [q] = quit")
 print("    Use ↑ for servos 80° & 78°, ↓ for servos 0°")
-
-# === Motor selection ===
-selected = [motor1_x, motor2_x]
 
 # === Terminal key handling ===
 def get_key():
@@ -94,31 +92,16 @@ servo_thread_1.start()
 servo_thread_2.start()
 
 old_settings = set_terminal_raw()
+
+# === Motor selection ===
+selected = [motor1_y, motor2_y]
 try:
     while True:
         key = get_key()
 
-        if key == '\x1b[A':  # Up Arrow - Select motors 1 & 2
-            selected = [motor1_x, motor2_x]
-            print("↑ Selected motors 1 & 2")
-            with servo_lock:
-                servo1_angle = 95
-                servo2_angle = 110
-            print("Setting servos: pwm1 → 90°, pwm2 → 90°")
-        elif key == '\x1b[B':  # Down Arrow - Select motors 3 & 4
-            selected = [motor1_y, motor2_y]
-            print("↓ Selected motors 3 & 4")
-            with servo_lock:
-                servo1_angle = 0
-                servo2_angle = 0
-            print("Setting servos: pwm1 → 0°, pwm2 → 0°")
-
-        elif key == 'w':
-            selected[0].move_forward()
-            selected[1].move_backward()
-        elif key == 's':
-            selected[0].move_backward()
-            selected[1].move_forward()
+        if key == 'w':
+            selected[0].move_deg(10000)
+            selected[1].move_deg(-10000)
         elif key == 'q':
             print("Exiting...")
             break

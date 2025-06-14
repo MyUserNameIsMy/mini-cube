@@ -44,7 +44,7 @@ motor1_y = MotorV1(DEVICE_NAME, 3)
 motor2_y = MotorV2(DEVICE_NAME, 2)
 
 
-motors = [motor1_x, motor1_y, motor2_x, motor2_y, motor1_z]
+motors = [motor1_z, motor1_x, motor1_y, motor2_x, motor2_y]
 for m in motors:
     m.enable_torque()
 

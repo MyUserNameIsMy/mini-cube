@@ -4,7 +4,7 @@ class MotorV1:
         self.ID = ID
         self.PROTOCOL_VERSION = 1.0
         self.BAUDRATE = BAUDRATE
-
+        print(self.PROTOCOL_VERSION, self.BAUDRATE)
         self.DIRECTION = 'CW'
         self.portHandler = PortHandler(DEVICE_NAME)
         self.packetHandler = PacketHandler(self.PROTOCOL_VERSION)

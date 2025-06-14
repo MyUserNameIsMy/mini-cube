@@ -37,7 +37,7 @@ def set_angle_loop(pwm, get_angle_func):
 # === Motor Setup ===
 DEVICE_NAME = '/dev/ttyUSB0'
 
-motor1_z = MotorV1(DEVICE_NAME, 4, 9600)
+motor1_z = MotorV1(DEVICE_NAME, 4)
 motor1_x = MotorV1(DEVICE_NAME, 1)
 motor2_x = MotorV2(DEVICE_NAME, 1)
 motor1_y = MotorV1(DEVICE_NAME, 3)

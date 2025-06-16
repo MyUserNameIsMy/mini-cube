@@ -98,62 +98,41 @@ old_settings = set_terminal_raw()
 selected = [motor1_y, motor2_y]
 forward = True
 running = True
+
 try:
     while running:
-        if forward:
-            print("Moving forward for a fixed duration...")
-            motor1_y.move_deg(-11800)
-            motor2_y.move_deg(11800)
-            time.sleep(8)
+        # 1. Wait until there is NO magnet detected to begin
+        print("Waiting for the area to be clear (no magnet)...")
+        while GPIO.input(HALL_SENSOR_PIN) == GPIO.LOW:
+            if get_key() == 'q':
+                running = False
+                break
+            time.sleep(0.1)
+        if not running: break
 
-            # Sequence servo action
-            with servo_lock:
-                servo1_angle = 95
-                servo2_angle = 110
-            time.sleep(1)
-            with servo_lock:
-                servo1_angle = 0
-                servo2_angle = 0
-            time.sleep(1)
+        # 2. Start moving backward
+        print("Area is clear. Moving backward, waiting for magnet...")
+        motor1_y.move_backward()
+        motor2_y.move_forward()
 
-            forward = not forward  # Switch to backward mode for next cycle
+        # 3. Keep moving while there is NO magnet
+        while GPIO.input(HALL_SENSOR_PIN) == GPIO.HIGH:
+            if get_key() == 'q':
+                running = False
+                break
+            time.sleep(0.05)
 
-        elif not forward:
-            print("Moving backward until magnet is gone...")
-            motor1_y.move_forward()
-            motor2_y.move_backward()
+        # 4. Stop when a magnet is detected or 'q' is pressed
+        motor1_y.stop_move()
+        motor2_y.stop_move()
 
-            # Loop while magnet is detected (sensor pin is LOW)
-            while GPIO.input(HALL_SENSOR_PIN) == GPIO.LOW:
-                if get_key() == 'q':
-                    running = False
-                    break
-                time.sleep(0.05)  # Prevent high CPU usage
+        if not running:
+            print("Movement stopped by user.")
+            break
 
-            if not running: break
-
-            # Stop motors once the magnet is no longer detected
-            motor1_y.stop_move()
-            motor2_y.stop_move()
-            print("Magnet not detected. Motors stopped.")
-
-            # Sequence servo action
-            with servo_lock:
-                servo1_angle = 95
-                servo2_angle = 110
-            time.sleep(1)
-            with servo_lock:
-                servo1_angle = 0
-                servo2_angle = 0
-            time.sleep(1)
-
-            forward = not forward  # Switch to forward mode for next cycle
-
-        # Check for quit key in the main loop as well
-        if get_key() == 'q':
-            running = False
-
-        time.sleep(0.05)
+        print("Magnet detected! Motors stopped.")
+        # The loop will now restart, waiting for the magnet to be removed again.
+        time.sleep(0.5)  # Small delay to prevent instant re-triggering
 
 finally:
     print("\nExiting program...")

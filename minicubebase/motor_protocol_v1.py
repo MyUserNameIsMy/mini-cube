@@ -1,7 +1,5 @@
 from dynamixel_sdk import *
 
-from winding_machine import packetHandler
-
 
 class MotorV1:
     def __init__(self, DEVICE_NAME, ID, BAUDRATE=57600):

@@ -133,8 +133,8 @@ try:
             motor2_y.set_mode('VELOCITY_MODE')
 
             print("Moving backward until magnet is gone...")
-            motor1_y.move_backward()
-            motor2_y.move_forward()
+            motor1_y.move_forward()
+            motor2_y.move_backward()
 
             # Loop while magnet is detected (sensor pin is LOW)
             while GPIO.input(HALL_SENSOR_PIN) == GPIO.HIGH:

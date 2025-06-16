@@ -121,12 +121,8 @@ try:
         else:  # Backward motion with sensor
             print("Preparing for backward motion...")
             # Disable torque, change mode, re-enable torque
-            motor1_y.disable_torque()
-            motor2_y.disable_torque()
             motor1_y.set_mode('WHEEL_MODE')
             motor2_y.set_mode('VELOCITY_MODE')
-            motor1_y.enable_torque()
-            motor2_y.enable_torque()
 
             print("Moving backward until magnet is gone...")
             motor1_y.move_backward()
@@ -148,12 +144,8 @@ try:
 
             # Revert motors to original state
             print("Reverting motor modes...")
-            motor1_y.disable_torque()
-            motor2_y.disable_torque()
             motor1_y.set_mode(MOTOR1_Y_ORIGINAL_MODE)
             motor2_y.set_mode(MOTOR2_Y_ORIGINAL_MODE)
-            motor1_y.enable_torque()
-            motor2_y.enable_torque()
 
             forward = not forward
 

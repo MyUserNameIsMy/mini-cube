@@ -83,6 +83,7 @@ def restore_terminal_settings(old_settings):
 # === Start PWM threads ===
 def get_servo1_angle(): return servo1_angle
 def get_servo2_angle(): return servo2_angle
+def run_motor(motor, degrees): motor.move_deg(degrees)
 
 servo_thread_1 = threading.Thread(target=set_angle_loop, args=(pwm1, get_servo1_angle))
 servo_thread_2 = threading.Thread(target=set_angle_loop, args=(pwm2, get_servo2_angle))
@@ -98,43 +99,45 @@ selected = [motor1_y, motor2_y]
 forward = True
 try:
     while True:
-
-        key = get_key()
-        if forward:
-            motor1_y.move_deg(-11800)
-            motor2_y.move_deg(11800)
-            time.sleep(8)
-            forward = not forward
-            with servo_lock:
-                servo1_angle = 95
-                servo2_angle = 110
-            time.sleep(1)
-            with servo_lock:
-                servo1_angle = 0
-                servo2_angle = 0
-            time.sleep(1)
-        elif not forward:
-            motor1_y.move_deg(11800)
-            motor2_y.move_deg(-11800)
-            time.sleep(10)
-            forward = not forward
-            with servo_lock:
-                servo1_angle = 95
-                servo2_angle = 110
-            time.sleep(1)
-            with servo_lock:
-                servo1_angle = 0
-                servo2_angle = 0
-            time.sleep(1)
-        elif key == 'q':
+        if get_key() == 'q':
             print("Exiting...")
             break
-        elif key is not None:
-            motor1_z.stop_move()
-            for m in selected:
-                m.stop_move()
-        time.sleep(0.05)
 
+        if forward:
+            print("Moving forward...")
+            # Create and start threads for each motor
+            motor1_thread = threading.Thread(target=run_motor, args=(motor1_y, -11800))
+            motor2_thread = threading.Thread(target=run_motor, args=(motor2_y, 11800))
+            motor1_thread.start()
+            motor2_thread.start()
+
+            # Wait for both motor threads to complete
+            motor1_thread.join()
+            motor2_thread.join()
+
+        else:  # not forward
+            print("Moving backward...")
+            motor1_thread = threading.Thread(target=run_motor, args=(motor1_y, 11800))
+            motor2_thread = threading.Thread(target=run_motor, args=(motor2_y, -11800))
+            motor1_thread.start()
+            motor2_thread.start()
+
+            motor1_thread.join()
+            motor2_thread.join()
+
+            # This part will now execute after the motor movements are complete
+        print("Actuating servos...")
+        with servo_lock:
+            servo1_angle = 95
+            servo2_angle = 110
+        time.sleep(1)
+        with servo_lock:
+            servo1_angle = 0
+            servo2_angle = 0
+        time.sleep(1)
+
+        # Toggle the direction for the next loop
+        forward = not forward
 finally:
     restore_terminal_settings(old_settings)
     servo_running = False

@@ -95,16 +95,21 @@ old_settings = set_terminal_raw()
 
 # === Motor selection ===
 selected = [motor1_y, motor2_y]
+forward = True
 try:
     while True:
-        key = get_key()
 
-        if key == 'w':
+        key = get_key()
+        if forward:
             motor1_y.move_deg(-11800)
             motor2_y.move_deg(11800)
-        elif key == 's':
+            time.sleep(10)
+            forward = not forward
+        elif not forward:
             motor1_y.move_deg(11800)
             motor2_y.move_deg(-11800)
+            time.sleep(10)
+            forward = not forward
         elif key == 'q':
             print("Exiting...")
             break

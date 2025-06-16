@@ -116,7 +116,7 @@ try:
             print("Moving forward for a fixed duration...")
             motor1_y.move_deg(-11800)
             motor2_y.move_deg(11800)
-            time.sleep(8)
+            time.sleep(6)
             forward = not forward
         else:  # Backward motion with sensor
             print("Waiting for the area to be clear of any magnets...")
@@ -170,11 +170,11 @@ try:
             with servo_lock:
                 servo1_angle = 95
                 servo2_angle = 110
-            time.sleep(1)
+            time.sleep(2)
             with servo_lock:
                 servo1_angle = 0
                 servo2_angle = 0
-            time.sleep(1)
+            time.sleep(2)
 
 finally:
     print("\nExiting program...")

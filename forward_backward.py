@@ -125,6 +125,8 @@ try:
             motor1_thread.join()
             motor2_thread.join()
 
+        time.sleep(5)
+
             # This part will now execute after the motor movements are complete
         print("Actuating servos...")
         with servo_lock:

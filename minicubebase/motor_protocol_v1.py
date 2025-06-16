@@ -1,4 +1,8 @@
 from dynamixel_sdk import *
+
+from winding_machine import packetHandler
+
+
 class MotorV1:
     def __init__(self, DEVICE_NAME, ID, BAUDRATE=57600):
         self.ID = ID
@@ -69,7 +73,9 @@ class MotorV1:
         self.enable_torque()
 
     def move_deg(self, deg):
-        res, err = self.packetHandler.write2ByteTxRx(self.portHandler, self.ID, self.ADDR["GOAL_POSITION"], deg)
+        initial_pos, res, err = self.packetHandler.read4ByteTxRx(self.portHandler, self.ID, self.ADDR["PRESENT_POSITION"])
+        goal_pos = initial_pos + deg
+        res, err = self.packetHandler.write2ByteTxRx(self.portHandler, self.ID, self.ADDR["GOAL_POSITION"], goal_pos)
         print(f"move_deg -> result: {res}, error: {err}")
 
     def move_forward(self):

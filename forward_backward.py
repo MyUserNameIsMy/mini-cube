@@ -103,13 +103,29 @@ try:
         if forward:
             motor1_y.move_deg(-11800)
             motor2_y.move_deg(11800)
-            time.sleep(10)
+            time.sleep(8)
             forward = not forward
+            with servo_lock:
+                servo1_angle = 95
+                servo2_angle = 110
+            time.sleep(1)
+            with servo_lock:
+                servo1_angle = 0
+                servo2_angle = 0
+            time.sleep(1)
         elif not forward:
             motor1_y.move_deg(11800)
             motor2_y.move_deg(-11800)
             time.sleep(10)
             forward = not forward
+            with servo_lock:
+                servo1_angle = 95
+                servo2_angle = 110
+            time.sleep(1)
+            with servo_lock:
+                servo1_angle = 0
+                servo2_angle = 0
+            time.sleep(1)
         elif key == 'q':
             print("Exiting...")
             break

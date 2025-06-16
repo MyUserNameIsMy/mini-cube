@@ -100,8 +100,8 @@ try:
         key = get_key()
 
         if key == 'w':
-            selected[0].move_deg(10000)
-            selected[1].move_deg(-10000)
+            selected[0].move_deg(-10000)
+            selected[1].move_deg(10000)
         elif key == 'q':
             print("Exiting...")
             break

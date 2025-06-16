@@ -119,6 +119,14 @@ try:
             time.sleep(8)
             forward = not forward
         else:  # Backward motion with sensor
+            print("Waiting for the area to be clear of any magnets...")
+            while GPIO.input(HALL_SENSOR_PIN) == GPIO.LOW:
+                if get_key() == 'q':
+                    running = False
+                    break
+                time.sleep(0.1)
+            if not running: break
+
             print("Preparing for backward motion...")
             # Disable torque, change mode, re-enable torque
             motor1_y.set_mode('WHEEL_MODE')
@@ -129,7 +137,7 @@ try:
             motor2_y.move_forward()
 
             # Loop while magnet is detected (sensor pin is LOW)
-            while GPIO.input(HALL_SENSOR_PIN) == GPIO.LOW:
+            while GPIO.input(HALL_SENSOR_PIN) == GPIO.HIGH:
                 print(f'DEBUG HALL_SENSOR_PIN: {GPIO.input(HALL_SENSOR_PIN)}')
                 if get_key() == 'q':
                     running = False

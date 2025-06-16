@@ -51,9 +51,9 @@ for m in motors:
     m.enable_torque()
 
 motor1_x.set_mode('MULTI_TURN_MODE')
-motor1_y.set_mode('MULTI_TURN_MODE')
+motor1_y.set_mode('WHEEL_MODE')
 motor2_x.set_mode('EXTENDED_POSITION_MODE')
-motor2_y.set_mode('EXTENDED_POSITION_MODE')
+motor2_y.set_mode('VELOCITY_MODE')
 
 motor1_z.set_mode('MULTI_TURN_MODE')
 

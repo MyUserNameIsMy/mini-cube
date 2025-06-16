@@ -9,11 +9,12 @@ from minicubebase import MotorV1, MotorV2
 
 # === Servo Setup ===
 SERVO_PINS = [12, 16]
+HALL_SENSOR_PIN = 4
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(SERVO_PINS[0], GPIO.OUT)
 GPIO.setup(SERVO_PINS[1], GPIO.OUT)
-
+GPIO.setup(HALL_SENSOR_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
 pwm1 = GPIO.PWM(SERVO_PINS[0], 50)
 pwm2 = GPIO.PWM(SERVO_PINS[1], 50)
@@ -49,19 +50,16 @@ motors = [motor1_z, motor1_x, motor1_y, motor2_x, motor2_y]
 for m in motors:
     m.enable_torque()
 
-motor1_x.set_mode('WHEEL_MODE')
-motor1_y.set_mode('WHEEL_MODE')
-motor2_x.set_mode('VELOCITY_MODE')
-motor2_y.set_mode('VELOCITY_MODE')
+motor1_x.set_mode('MULTI_TURN_MODE')
+motor1_y.set_mode('MULTI_TURN_MODE')
+motor2_x.set_mode('EXTENDED_POSITION_MODE')
+motor2_y.set_mode('EXTENDED_POSITION_MODE')
 
-motor1_z.set_mode('WHEEL_MODE')
+motor1_z.set_mode('MULTI_TURN_MODE')
 
 print("🕹️  Arrow ↑ selects motors 1 & 2 | ↓ selects motors 3 & 4")
 print("    Use [w] = forward | [s] = backward | [q] = quit")
 print("    Use ↑ for servos 80° & 78°, ↓ for servos 0°")
-
-# === Motor selection ===
-selected = [motor1_x, motor2_x]
 
 # === Terminal key handling ===
 def get_key():
@@ -87,7 +85,6 @@ def restore_terminal_settings(old_settings):
 # === Start PWM threads ===
 def get_servo1_angle(): return servo1_angle
 def get_servo2_angle(): return servo2_angle
-
 servo_thread_1 = threading.Thread(target=set_angle_loop, args=(pwm1, get_servo1_angle))
 servo_thread_2 = threading.Thread(target=set_angle_loop, args=(pwm2, get_servo2_angle))
 servo_thread_1.daemon = True
@@ -96,53 +93,86 @@ servo_thread_1.start()
 servo_thread_2.start()
 
 old_settings = set_terminal_raw()
-try:
-    while True:
-        key = get_key()
 
-        if key == '\x1b[A':  # Up Arrow - Select motors 1 & 2
-            selected = [motor1_x, motor2_x]
-            print("↑ Selected motors 1 & 2")
+# === Motor selection ===
+selected = [motor1_y, motor2_y]
+forward = True
+running = True
+try:
+    while running:
+        if forward:
+            print("Moving forward for a fixed duration...")
+            motor1_y.move_deg(-11800)
+            motor2_y.move_deg(11800)
+            time.sleep(8)
+
+            # Sequence servo action
             with servo_lock:
                 servo1_angle = 95
                 servo2_angle = 110
-            print("Setting servos: pwm1 → 90°, pwm2 → 90°")
-        elif key == '\x1b[B':  # Down Arrow - Select motors 3 & 4
-            selected = [motor1_y, motor2_y]
-            print("↓ Selected motors 3 & 4")
+            time.sleep(1)
             with servo_lock:
                 servo1_angle = 0
                 servo2_angle = 0
-            print("Setting servos: pwm1 → 0°, pwm2 → 0°")
-        elif key == 'u':
-            motor1_z.move_forward()
-        elif key == 'd':
-            motor1_z.move_backward()
-        elif key == 'w':
-            selected[0].move_forward()
-            selected[1].move_backward()
-        elif key == 's':
-            selected[0].move_backward()
-            selected[1].move_forward()
-        elif key == 'q':
-            print("Exiting...")
-            break
-        elif key is not None:
-            motor1_z.stop_move()
-            for m in selected:
-                m.stop_move()
+            time.sleep(1)
+
+            forward = not forward  # Switch to backward mode for next cycle
+
+        elif not forward:
+            print("Moving backward until magnet is gone...")
+            motor1_y.move_backward()
+            motor2_y.move_forward()
+
+            # Loop while magnet is detected (sensor pin is LOW)
+            while GPIO.input(HALL_SENSOR_PIN) == GPIO.LOW:
+                if get_key() == 'q':
+                    running = False
+                    break
+                time.sleep(0.05)  # Prevent high CPU usage
+
+            if not running: break
+
+            # Stop motors once the magnet is no longer detected
+            motor1_y.stop_move()
+            motor2_y.stop_move()
+            print("Magnet not detected. Motors stopped.")
+
+            # Sequence servo action
+            with servo_lock:
+                servo1_angle = 95
+                servo2_angle = 110
+            time.sleep(1)
+            with servo_lock:
+                servo1_angle = 0
+                servo2_angle = 0
+            time.sleep(1)
+
+            forward = not forward  # Switch to forward mode for next cycle
+
+        # Check for quit key in the main loop as well
+        if get_key() == 'q':
+            running = False
+
         time.sleep(0.05)
 
 finally:
+    print("\nExiting program...")
     restore_terminal_settings(old_settings)
+
+    # Signal threads to stop
     servo_running = False
     servo_thread_1.join()
     servo_thread_2.join()
+
+    # Stop all hardware
     for m in motors:
         m.stop_move()
         m.disable_torque()
-        m.portHandler.closePort()
+        if m.portHandler.is_open:
+            m.portHandler.closePort()
+
     pwm1.stop()
     pwm2.stop()
     GPIO.cleanup()
-    print("Motors and servos stopped, GPIO cleaned up.")
+
+    print("Motors, servos, and GPIO cleaned up successfully.")

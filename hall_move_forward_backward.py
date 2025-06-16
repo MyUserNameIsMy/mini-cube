@@ -130,7 +130,7 @@ try:
 
             # Loop while magnet is detected (sensor pin is LOW)
             while GPIO.input(HALL_SENSOR_PIN) == GPIO.LOW:
-                print('')
+                print(f'DEBUG HALL_SENSOR_PIN: {GPIO.input(HALL_SENSOR_PIN)}')
                 if get_key() == 'q':
                     running = False
                     break

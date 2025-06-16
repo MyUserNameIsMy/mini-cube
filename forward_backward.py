@@ -100,8 +100,11 @@ try:
         key = get_key()
 
         if key == 'w':
-            selected[0].move_deg(-8000)
-            selected[1].move_deg(8000)
+            motor1_y.move_deg(-11800)
+            motor2_y.move_deg(11800)
+        elif key == 's':
+            motor1_y.move_deg(11800)
+            motor2_y.move_deg(-11800)
         elif key == 'q':
             print("Exiting...")
             break

@@ -58,7 +58,7 @@ class MotorV1:
     def enable_torque(self):
         res, err = self.packetHandler.write1ByteTxRx(self.portHandler, self.ID, self.ADDR["TORQUE_ENABLE"],
                                                      self.TORQUE_ENABLE)
-        print(f"enable_torque -> result: {res}, error: {err}")
+        print(f"enable_torque -> result: {self.packetHandler.getTxRxResult(res)}, error: {self.packetHandler.getTxRxResult(err)}")
 
     def disable_torque(self):
         res, err = self.packetHandler.write1ByteTxRx(self.portHandler, self.ID, self.ADDR["TORQUE_ENABLE"],

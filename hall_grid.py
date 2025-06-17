@@ -147,13 +147,13 @@ try:
 
                 motor1_y.move_deg(-600)
                 motor2_y.move_deg(600)
-                time.sleep(0.05)
+                time.sleep(1)
                 motor1_y.stop_move()
                 motor2_y.stop_move()
 
             motor1_y.move_deg(800)
             motor2_y.move_deg(-800)
-            time.sleep(0.05)
+            time.sleep(1)
             motor1_y.stop_move()
             motor2_y.stop_move()
 
@@ -191,13 +191,13 @@ try:
 
                 motor1_y.move_deg(600)
                 motor2_y.move_deg(-600)
-                time.sleep(0.05)
+                time.sleep(1)
                 motor1_y.stop_move()
                 motor2_y.stop_move()
 
             motor1_y.move_deg(-800)
             motor2_y.move_deg(800)
-            time.sleep(0.05)
+            time.sleep(1)
             motor1_y.stop_move()
             motor2_y.stop_move()
 

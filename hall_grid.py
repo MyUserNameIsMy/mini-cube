@@ -120,36 +120,29 @@ try:
             break
 
         if forward:
-            for i in range(2):
-                motor1_y.set_mode('WHEEL_MODE')
-                motor2_y.set_mode('VELOCITY_MODE')
+            motor1_y.set_mode('WHEEL_MODE')
+            motor2_y.set_mode('VELOCITY_MODE')
 
-                motor1_y.move_backward()
-                motor2_y.move_forward()
+            motor1_y.move_backward()
+            motor2_y.move_forward()
 
+            time.sleep(0.05)
+            while GPIO.input(HALL_Y) == GPIO.HIGH:
+                if get_key() == 'q':
+                    running = False
+                    break
                 time.sleep(0.05)
-                while GPIO.input(HALL_Y) == GPIO.HIGH:
-                    if get_key() == 'q':
-                        running = False
-                        break
-                    time.sleep(0.05)
-                if not running: break
+            if not running: break
 
-                motor1_y.stop_move()
-                motor2_y.stop_move()
+            motor1_y.stop_move()
+            motor2_y.stop_move()
 
-                print("Magnet not detected. Motors stopped.")
-                time.sleep(0.05)
-                # Revert motors to original state
-                print("Reverting motor modes...")
-                motor1_y.set_mode(MOTOR_V1_ORIGINAL_MODE)
-                motor2_y.set_mode(MOTOR_V2_ORIGINAL_MODE)
-
-                motor1_y.move_deg(-600)
-                motor2_y.move_deg(600)
-                time.sleep(1)
-                motor1_y.stop_move()
-                motor2_y.stop_move()
+            print("Magnet not detected. Motors stopped.")
+            time.sleep(0.05)
+            # Revert motors to original state
+            print("Reverting motor modes...")
+            motor1_y.set_mode(MOTOR_V1_ORIGINAL_MODE)
+            motor2_y.set_mode(MOTOR_V2_ORIGINAL_MODE)
 
             motor1_y.move_deg(400)
             motor2_y.move_deg(-400)
@@ -159,80 +152,73 @@ try:
 
             forward = not forward
         else:
-            for i in range(2):
 
-                print("Preparing for backward motion...")
+            print("Preparing for backward motion...")
 
-                motor1_y.set_mode('WHEEL_MODE')
-                motor2_y.set_mode('VELOCITY_MODE')
+            motor1_y.set_mode('WHEEL_MODE')
+            motor2_y.set_mode('VELOCITY_MODE')
 
-                print("Moving backward until magnet is gone...")
-                motor1_y.move_forward()
-                motor2_y.move_backward()
+            print("Moving backward until magnet is gone...")
+            motor1_y.move_forward()
+            motor2_y.move_backward()
 
+            time.sleep(0.05)
+            while GPIO.input(HALL_Y) == GPIO.HIGH:
+
+                if get_key() == 'q':
+                    running = False
+                    break
                 time.sleep(0.05)
-                while GPIO.input(HALL_Y) == GPIO.HIGH:
+            if not running: break
 
-                    if get_key() == 'q':
-                        running = False
-                        break
-                    time.sleep(0.05)
-                if not running: break
+            # Stop motors
+            motor1_y.stop_move()
+            motor2_y.stop_move()
+            print("Magnet not detected. Motors stopped.")
+            time.sleep(0.05)
+            # Revert motors to original state
+            print("Reverting motor modes...")
+            motor1_y.set_mode(MOTOR_V1_ORIGINAL_MODE)
+            motor2_y.set_mode(MOTOR_V2_ORIGINAL_MODE)
 
-                # Stop motors
-                motor1_y.stop_move()
-                motor2_y.stop_move()
-                print("Magnet not detected. Motors stopped.")
-                time.sleep(0.05)
-                # Revert motors to original state
-                print("Reverting motor modes...")
-                motor1_y.set_mode(MOTOR_V1_ORIGINAL_MODE)
-                motor2_y.set_mode(MOTOR_V2_ORIGINAL_MODE)
-
-                motor1_y.move_deg(600)
-                motor2_y.move_deg(-600)
-                time.sleep(1)
-                motor1_y.stop_move()
-                motor2_y.stop_move()
-
-            motor1_y.move_deg(-1000)
-            motor2_y.move_deg(1000)
+            motor1_y.move_deg(-400)
+            motor2_y.move_deg(400)
             time.sleep(1)
             motor1_y.stop_move()
             motor2_y.stop_move()
 
             forward = not forward
 
-        # Common servo sequence after any move
-        if running:
-            print("Executing servo sequence...")
-            with servo_lock:
-                servo1_angle = 95
-                servo2_angle = 110
-            time.sleep(2)
-            with servo_lock:
-                servo1_angle = 0
-                servo2_angle = 0
-            time.sleep(2)
+    # Common servo sequence after any move
+    if running:
+        print("Executing servo sequence...")
+        with servo_lock:
+            servo1_angle = 95
+            servo2_angle = 110
+        time.sleep(2)
+        with servo_lock:
+            servo1_angle = 0
+            servo2_angle = 0
+        time.sleep(2)
 
 finally:
-    print("\nExiting program...")
-    restore_terminal_settings(old_settings)
+print("\nExiting program...")
+restore_terminal_settings(old_settings)
 
-    # Signal threads to stop
-    servo_running = False
-    servo_thread_1.join()
-    servo_thread_2.join()
+# Signal threads to stop
+servo_running = False
+servo_thread_1.join()
+servo_thread_2.join()
 
-    # Stop all hardware
-    for m in motors:
-        m.stop_move()
-        m.disable_torque()
-        if m.portHandler.is_open:
-            m.portHandler.closePort()
+# Stop all hardware
+for m in motors:
+    m.stop_move()
+    m.disable_torque()
+    if m.portHandler.is_open:
+        m.portHandler.closePort()
 
-    pwm1.stop()
-    pwm2.stop()
-    GPIO.cleanup()
+pwm1.stop()
+pwm2.stop()
+GPIO.cleanup()
 
-    print("Motors, servos, and GPIO cleaned up successfully.")
+print("Motors, servos, and GPIO cleaned up successfully.")

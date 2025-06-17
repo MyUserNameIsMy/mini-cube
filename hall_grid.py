@@ -120,6 +120,7 @@ try:
             break
 
         if forward:
+            print('Moving till magnet found')
             motor1_y.set_mode('WHEEL_MODE')
             motor2_y.set_mode('VELOCITY_MODE')
 
@@ -136,11 +137,10 @@ try:
 
             motor1_y.stop_move()
             motor2_y.stop_move()
+            print("Magnet detected. Motors stopped.")
 
-            print("Magnet not detected. Motors stopped.")
             time.sleep(0.05)
-            # Revert motors to original state
-            print("Reverting motor modes...")
+            print("Adjusting itself started.")
             motor1_y.set_mode(MOTOR_V1_ORIGINAL_MODE)
             motor2_y.set_mode(MOTOR_V2_ORIGINAL_MODE)
 
@@ -149,7 +149,7 @@ try:
             time.sleep(1)
             motor1_y.stop_move()
             motor2_y.stop_move()
-
+            print("Adjusting itself ended.")
             forward = not forward
         else:
 
@@ -171,13 +171,12 @@ try:
                 time.sleep(0.05)
             if not running: break
 
-            # Stop motors
             motor1_y.stop_move()
             motor2_y.stop_move()
-            print("Magnet not detected. Motors stopped.")
+            print("Magnet detected. Motors stopped.")
+
             time.sleep(0.05)
-            # Revert motors to original state
-            print("Reverting motor modes...")
+            print("Adjusting itself started.")
             motor1_y.set_mode(MOTOR_V1_ORIGINAL_MODE)
             motor2_y.set_mode(MOTOR_V2_ORIGINAL_MODE)
 
@@ -186,6 +185,7 @@ try:
             time.sleep(1)
             motor1_y.stop_move()
             motor2_y.stop_move()
+            print("Adjusting itself ended.")
 
             forward = not forward
 

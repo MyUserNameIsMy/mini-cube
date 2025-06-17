@@ -71,7 +71,7 @@ class MotorV1:
         res, err = self.packetHandler.write2ByteTxRx(self.portHandler, self.ID, self.ADDR["CCW"], self.MODES[mode]["CCW"])
         print(
             f"set_mode_ccw -> result: {self.packetHandler.getTxRxResult(res)}, error: {self.packetHandler.getRxPacketError(err)}")
-
+        time.sleep(1)
         res, err = self.packetHandler.write2ByteTxRx(self.portHandler, self.ID, self.ADDR["CW"], self.MODES[mode]["CW"])
         print(
             f"set_mode_cw -> result: {self.packetHandler.getTxRxResult(res)}, error: {self.packetHandler.getRxPacketError(err)}")

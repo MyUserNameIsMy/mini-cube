@@ -55,26 +55,31 @@ class MotorV1:
         else:
             print("Baudrate set successfully.")
 
-
     def enable_torque(self):
-        res, err = self.packetHandler.write1ByteTxRx(self.portHandler, self.ID, self.ADDR["TORQUE_ENABLE"], self.TORQUE_ENABLE)
+        res, err = self.packetHandler.write1ByteTxRx(self.portHandler, self.ID, self.ADDR["TORQUE_ENABLE"],
+                                                     self.TORQUE_ENABLE)
         print(f"enable_torque -> result: {res}, error: {err}")
 
     def disable_torque(self):
-        res, err = self.packetHandler.write1ByteTxRx(self.portHandler, self.ID, self.ADDR["TORQUE_ENABLE"], self.TORQUE_DISABLE)
+        res, err = self.packetHandler.write1ByteTxRx(self.portHandler, self.ID, self.ADDR["TORQUE_ENABLE"],
+                                                     self.TORQUE_DISABLE)
         print(f"disable_torque -> result: {res}, error: {err}")
 
     def set_mode(self, mode):
         self.disable_torque()
-        res, err = self.packetHandler.write2ByteTxRx(self.portHandler, self.ID, self.ADDR["CW"], self.MODES[mode]["CW"])
-        print(f"set_mode_cw -> result: {self.packetHandler.getTxRxResult(res)}, error: {self.packetHandler.getRxPacketError(err)}")
-
         res, err = self.packetHandler.write2ByteTxRx(self.portHandler, self.ID, self.ADDR["CCW"], self.MODES[mode]["CCW"])
-        print(f"set_mode_ccw -> result: {self.packetHandler.getTxRxResult(res)}, error: {self.packetHandler.getRxPacketError(err)}")
+        print(
+            f"set_mode_ccw -> result: {self.packetHandler.getTxRxResult(res)}, error: {self.packetHandler.getRxPacketError(err)}")
+
+        res, err = self.packetHandler.write2ByteTxRx(self.portHandler, self.ID, self.ADDR["CW"], self.MODES[mode]["CW"])
+        print(
+            f"set_mode_cw -> result: {self.packetHandler.getTxRxResult(res)}, error: {self.packetHandler.getRxPacketError(err)}")
+
         self.enable_torque()
 
     def move_deg(self, deg):
-        initial_pos, res, err = self.packetHandler.read4ByteTxRx(self.portHandler, self.ID, self.ADDR["PRESENT_POSITION"])
+        initial_pos, res, err = self.packetHandler.read4ByteTxRx(self.portHandler, self.ID,
+                                                                 self.ADDR["PRESENT_POSITION"])
         goal_pos = initial_pos + deg
         res, err = self.packetHandler.write2ByteTxRx(self.portHandler, self.ID, self.ADDR["GOAL_POSITION"], goal_pos)
         print(f"move_deg -> result: {res}, error: {err}")
@@ -89,7 +94,6 @@ class MotorV1:
         res, err = self.packetHandler.write2ByteTxRx(self.portHandler, self.ID, self.ADDR["MOVING_SPEED"], 2000)
         print(f"move_backward -> result: {res}, error: {err}")
 
-
     def stop_move(self):
         if self.DIRECTION == "CW":
             value = 1024
@@ -97,7 +101,3 @@ class MotorV1:
             value = 0
         res, err = self.packetHandler.write2ByteTxRx(self.portHandler, self.ID, self.ADDR["MOVING_SPEED"], value)
         print(f"stop_move -> result: {res}, error: {err}")
-
-
-
-

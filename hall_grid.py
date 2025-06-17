@@ -144,8 +144,8 @@ try:
             motor1_y.set_mode(MOTOR_V1_ORIGINAL_MODE)
             motor2_y.set_mode(MOTOR_V2_ORIGINAL_MODE)
 
-            motor1_y.move_deg(300)
-            motor2_y.move_deg(-300)
+            motor1_y.move_deg(-600)
+            motor2_y.move_deg(600)
             time.sleep(1)
             motor1_y.stop_move()
             motor2_y.stop_move()
@@ -180,8 +180,8 @@ try:
             motor1_y.set_mode(MOTOR_V1_ORIGINAL_MODE)
             motor2_y.set_mode(MOTOR_V2_ORIGINAL_MODE)
 
-            motor1_y.move_deg(-300)
-            motor2_y.move_deg(300)
+            motor1_y.move_deg(1000)
+            motor2_y.move_deg(-1000)
             time.sleep(1)
             motor1_y.stop_move()
             motor2_y.stop_move()

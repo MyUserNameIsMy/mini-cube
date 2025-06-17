@@ -146,7 +146,7 @@ try:
 
             motor1_y.move_deg(-200)
             motor2_y.move_deg(200)
-            time.sleep(1)
+            time.sleep(0.05)
             motor1_y.stop_move()
             motor2_y.stop_move()
             print("Adjusting itself ended.")
@@ -180,9 +180,9 @@ try:
             motor1_y.set_mode(MOTOR_V1_ORIGINAL_MODE)
             motor2_y.set_mode(MOTOR_V2_ORIGINAL_MODE)
 
-            motor1_y.move_deg(-600)
-            motor2_y.move_deg(600)
-            time.sleep(1)
+            motor1_y.move_deg(-400)
+            motor2_y.move_deg(400)
+            time.sleep(0.05)
             motor1_y.stop_move()
             motor2_y.stop_move()
             print("Adjusting itself ended.")

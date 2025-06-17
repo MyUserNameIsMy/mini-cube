@@ -120,14 +120,6 @@ try:
             break
 
         if forward:
-            print("Waiting for the area to be clear of any magnets...")
-            while GPIO.input(HALL_Y) == GPIO.LOW:
-                if get_key() == 'q':
-                    running = False
-                    break
-                time.sleep(0.1)
-            if not running: break
-
             motor1_y.set_mode('WHEEL_MODE')
             motor2_y.set_mode('VELOCITY_MODE')
 
@@ -141,6 +133,10 @@ try:
                     break
                 time.sleep(0.05)
             if not running: break
+
+            motor1_y.stop_move()
+            motor2_y.stop_move()
+
             forward = not forward
         else:
             print("Preparing for backward motion...")

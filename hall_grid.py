@@ -144,8 +144,8 @@ try:
             motor1_y.set_mode(MOTOR_V1_ORIGINAL_MODE)
             motor2_y.set_mode(MOTOR_V2_ORIGINAL_MODE)
 
-            motor1_y.move_deg(400)
-            motor2_y.move_deg(-400)
+            motor1_y.move_deg(300)
+            motor2_y.move_deg(-300)
             time.sleep(1)
             motor1_y.stop_move()
             motor2_y.stop_move()
@@ -181,8 +181,8 @@ try:
             motor1_y.set_mode(MOTOR_V1_ORIGINAL_MODE)
             motor2_y.set_mode(MOTOR_V2_ORIGINAL_MODE)
 
-            motor1_y.move_deg(-400)
-            motor2_y.move_deg(400)
+            motor1_y.move_deg(-300)
+            motor2_y.move_deg(300)
             time.sleep(1)
             motor1_y.stop_move()
             motor2_y.stop_move()
@@ -202,7 +202,7 @@ try:
         time.sleep(2)
 
 finally:
-print("\nExiting program...")
+    print("\nExiting program...")
 restore_terminal_settings(old_settings)
 
 # Signal threads to stop

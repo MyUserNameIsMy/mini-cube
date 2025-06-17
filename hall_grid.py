@@ -119,6 +119,13 @@ try:
             running = False
             break
 
+        motor1_y.move_deg(2000)
+        motor2_y.move_deg(-2000)
+        time.sleep(0.05)
+        motor1_y.stop_move()
+        motor2_y.stop_move()
+
+
         if forward:
             for i in range(2):
                 motor1_y.set_mode('WHEEL_MODE')
@@ -145,11 +152,17 @@ try:
                 motor1_y.set_mode(MOTOR_V1_ORIGINAL_MODE)
                 motor2_y.set_mode(MOTOR_V2_ORIGINAL_MODE)
 
-                motor1_y.move_deg(200)
-                motor2_y.move_deg(-200)
+                motor1_y.move_deg(-200)
+                motor2_y.move_deg(200)
                 time.sleep(0.05)
                 motor1_y.stop_move()
                 motor2_y.stop_move()
+
+            motor1_y.move_deg(200)
+            motor2_y.move_deg(-200)
+            time.sleep(0.05)
+            motor1_y.stop_move()
+            motor2_y.stop_move()
 
             forward = not forward
         else:
@@ -183,11 +196,17 @@ try:
                 motor1_y.set_mode(MOTOR_V1_ORIGINAL_MODE)
                 motor2_y.set_mode(MOTOR_V2_ORIGINAL_MODE)
 
-                motor1_y.move_deg(-200)
-                motor2_y.move_deg(200)
+                motor1_y.move_deg(200)
+                motor2_y.move_deg(-200)
                 time.sleep(0.05)
                 motor1_y.stop_move()
                 motor2_y.stop_move()
+
+            motor1_y.move_deg(-200)
+            motor2_y.move_deg(200)
+            time.sleep(0.05)
+            motor1_y.stop_move()
+            motor2_y.stop_move()
 
             forward = not forward
 

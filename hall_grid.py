@@ -139,7 +139,7 @@ try:
             motor2_y.stop_move()
             print("Magnet detected. Motors stopped.")
 
-            time.sleep(1)
+            time.sleep(0.05)
             print("Adjusting itself started.")
             motor1_y.set_mode(MOTOR_V1_ORIGINAL_MODE)
             motor2_y.set_mode(MOTOR_V2_ORIGINAL_MODE)
@@ -175,13 +175,13 @@ try:
             motor2_y.stop_move()
             print("Magnet detected. Motors stopped.")
 
-            time.sleep(1)
+            time.sleep(0.05)
             print("Adjusting itself started.")
             motor1_y.set_mode(MOTOR_V1_ORIGINAL_MODE)
             motor2_y.set_mode(MOTOR_V2_ORIGINAL_MODE)
 
-            motor1_y.move_deg(-800)
-            motor2_y.move_deg(800)
+            motor1_y.move_deg(-600)
+            motor2_y.move_deg(600)
             time.sleep(1)
             motor1_y.stop_move()
             motor2_y.stop_move()

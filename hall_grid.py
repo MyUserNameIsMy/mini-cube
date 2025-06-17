@@ -127,7 +127,7 @@ try:
             motor1_y.move_backward()
             motor2_y.move_forward()
 
-            time.sleep(0.05)
+            time.sleep(1.5)
             while GPIO.input(HALL_Y) == GPIO.HIGH:
                 if get_key() == 'q':
                     running = False
@@ -162,7 +162,7 @@ try:
             motor1_y.move_forward()
             motor2_y.move_backward()
 
-            time.sleep(0.05)
+            time.sleep(1.5)
             while GPIO.input(HALL_Y) == GPIO.HIGH:
 
                 if get_key() == 'q':
@@ -198,19 +198,6 @@ try:
                 servo1_angle = 0
                 servo2_angle = 0
             time.sleep(2)
-
-        if forward:
-            motor1_y.move_deg(-800)
-            motor2_y.move_deg(800)
-            time.sleep(1)
-            motor1_y.stop_move()
-            motor2_y.stop_move()
-        else:
-            motor1_y.move_deg(800)
-            motor2_y.move_deg(-800)
-            time.sleep(1)
-            motor1_y.stop_move()
-            motor2_y.stop_move()
 
 finally:
     print("\nExiting program...")

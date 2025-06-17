@@ -151,8 +151,8 @@ try:
                 motor1_y.stop_move()
                 motor2_y.stop_move()
 
-            motor1_y.move_deg(800)
-            motor2_y.move_deg(-800)
+            motor1_y.move_deg(400)
+            motor2_y.move_deg(-400)
             time.sleep(1)
             motor1_y.stop_move()
             motor2_y.stop_move()

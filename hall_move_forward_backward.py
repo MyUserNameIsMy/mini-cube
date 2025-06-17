@@ -127,6 +127,7 @@ try:
                 time.sleep(0.1)
             if not running: break
 
+
             print("Preparing for backward motion...")
             # Disable torque, change mode, re-enable torque
             motor1_y.set_mode('WHEEL_MODE')
@@ -136,6 +137,7 @@ try:
             motor1_y.move_forward()
             motor2_y.move_backward()
 
+            time.sleep(0.05)
             # Loop while magnet is detected (sensor pin is LOW)
             while GPIO.input(HALL_SENSOR_PIN) == GPIO.HIGH:
                 print(f'DEBUG HALL_SENSOR_PIN: {GPIO.input(HALL_SENSOR_PIN)}')
@@ -150,7 +152,7 @@ try:
             motor1_y.stop_move()
             motor2_y.stop_move()
             print("Magnet not detected. Motors stopped.")
-
+            time.sleep(0.05)
             # Revert motors to original state
             print("Reverting motor modes...")
             motor1_y.set_mode(MOTOR1_Y_ORIGINAL_MODE)
@@ -158,7 +160,7 @@ try:
 
             motor1_y.move_deg(-200)
             motor2_y.move_deg(200)
-
+            time.sleep(0.05)
             motor1_y.stop_move()
             motor2_y.stop_move()
 

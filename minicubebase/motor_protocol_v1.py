@@ -70,7 +70,6 @@ class MotorV1:
         print(f"set_mode_cw -> result: {res}, error: {err}")
         res, err = self.packetHandler.write2ByteTxRx(self.portHandler, self.ID, self.ADDR["CCW"], self.MODES[mode]["CCW"])
         print(f"set_mode_ccw -> result: {res}, error: {err}")
-        time.sleep(1)
         self.enable_torque()
 
     def move_deg(self, deg):

@@ -144,8 +144,8 @@ try:
             motor1_y.set_mode(MOTOR_V1_ORIGINAL_MODE)
             motor2_y.set_mode(MOTOR_V2_ORIGINAL_MODE)
 
-            motor1_y.move_deg(-600)
-            motor2_y.move_deg(600)
+            motor1_y.move_deg(-400)
+            motor2_y.move_deg(400)
             time.sleep(1)
             motor1_y.stop_move()
             motor2_y.stop_move()
@@ -180,8 +180,8 @@ try:
             motor1_y.set_mode(MOTOR_V1_ORIGINAL_MODE)
             motor2_y.set_mode(MOTOR_V2_ORIGINAL_MODE)
 
-            motor1_y.move_deg(1000)
-            motor2_y.move_deg(-1000)
+            motor1_y.move_deg(-800)
+            motor2_y.move_deg(800)
             time.sleep(1)
             motor1_y.stop_move()
             motor2_y.stop_move()
@@ -198,6 +198,19 @@ try:
                 servo1_angle = 0
                 servo2_angle = 0
             time.sleep(2)
+
+        if forward:
+            motor1_y.move_deg(-800)
+            motor2_y.move_deg(800)
+            time.sleep(1)
+            motor1_y.stop_move()
+            motor2_y.stop_move()
+        else:
+            motor1_y.move_deg(800)
+            motor2_y.move_deg(-800)
+            time.sleep(1)
+            motor1_y.stop_move()
+            motor2_y.stop_move()
 
 finally:
     print("\nExiting program...")

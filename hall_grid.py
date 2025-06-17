@@ -188,18 +188,16 @@ try:
             print("Adjusting itself ended.")
 
             forward = not forward
-
-    # Common servo sequence after any move
-    if running:
-        print("Executing servo sequence...")
-        with servo_lock:
-            servo1_angle = 95
-            servo2_angle = 110
-        time.sleep(2)
-        with servo_lock:
-            servo1_angle = 0
-            servo2_angle = 0
-        time.sleep(2)
+        if running:
+            print("Executing servo sequence...")
+            with servo_lock:
+                servo1_angle = 95
+                servo2_angle = 110
+            time.sleep(2)
+            with servo_lock:
+                servo1_angle = 0
+                servo2_angle = 0
+            time.sleep(2)
 
 finally:
     print("\nExiting program...")

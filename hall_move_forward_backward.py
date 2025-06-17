@@ -147,10 +147,6 @@ try:
                 time.sleep(0.05)
             print(f'DEBUG HALL_SENSOR_PIN: {GPIO.input(HALL_SENSOR_PIN)}')
             if not running: break
-
-            # Stop motors
-            motor1_y.stop_move()
-            motor2_y.stop_move()
             print("Magnet not detected. Motors stopped.")
             time.sleep(0.05)
             # Revert motors to original state

@@ -196,7 +196,7 @@ def main_sequence():
     print("\n[PHASE 3: DROPOFF]")
     control_z_axis(Z_AXIS_LOWER_FOR_DROPOFF_DEG) # Use the lower placement value
     control_magnet('OFF')
-    control_z_axis(Z_AXIS_HOME_POSITION_DEG) # Return to normal height
+    motor1_z.set_deg(Z_AXIS_HOME_POSITION_DEG) # Return to normal height
 
     # --- Step 4: Reset servo positions ---
     print("\n[PHASE 4: RESET]")

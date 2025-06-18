@@ -83,6 +83,11 @@ class MotorV1:
         res, err = self.packetHandler.write2ByteTxRx(self.portHandler, self.ID, self.ADDR["GOAL_POSITION"], goal_pos)
         print(f"move_deg -> result: {res}, error: {err}")
 
+    def set_deg(self, deg):
+        res, err = self.packetHandler.write2ByteTxRx(self.portHandler, self.ID, self.ADDR["GOAL_POSITION"], deg)
+        print(f"move_deg -> result: {res}, error: {err}")
+
+
     def move_forward(self):
         self.DIRECTION = "CW"
         res, err = self.packetHandler.write2ByteTxRx(self.portHandler, self.ID, self.ADDR["MOVING_SPEED"], 1000)

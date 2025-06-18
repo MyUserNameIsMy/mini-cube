@@ -12,11 +12,15 @@ MAGNET_PIN = 6
 DEVICE_NAME = '/dev/ttyUSB0'
 
 # === Constants for Movement ===
+
+# --- NEW: Added a home position for the Z-axis ---
+Z_AXIS_HOME_POSITION_DEG = 4000
+
 # --- IMPROVED: Specific Z-Axis positions for pickup and drop-off ---
-Z_AXIS_LOWER_FOR_PICKUP_DEG = -5000  # Position to lower to when picking up
-Z_AXIS_RAISE_AFTER_PICKUP_DEG = 6000   # Lift HIGHER after grabbing the box to ensure clearance
-Z_AXIS_LOWER_FOR_DROPOFF_DEG = -5200 # Go LOWER when placing the box to ensure contact
-Z_AXIS_RAISE_AFTER_DROPOFF_DEG = 5000  # Return to a standard height after dropping off
+Z_AXIS_LOWER_FOR_PICKUP_DEG = -6000  # Position to lower to when picking up
+Z_AXIS_RAISE_AFTER_PICKUP_DEG = 7000   # Lift HIGHER after grabbing the box to ensure clearance
+Z_AXIS_LOWER_FOR_DROPOFF_DEG = -7000 # Go LOWER when placing the box to ensure contact
+Z_AXIS_RAISE_AFTER_DROPOFF_DEG = Z_AXIS_HOME_POSITION_DEG  # Return to a standard height after dropping off
 
 SERVO_LIFT_ANGLE_1 = 95
 SERVO_LIFT_ANGLE_2 = 110
@@ -214,6 +218,12 @@ if __name__ == "__main__":
     print("Servo control threads started.")
 
     try:
+        # --- NEW: Initialize Z-axis to a known starting position ---
+        print(f"\nInitializing Z-axis to HOME position ({Z_AXIS_HOME_POSITION_DEG} degrees)...")
+        motor1_z.set_deg(Z_AXIS_HOME_POSITION_DEG)
+        time.sleep(2.5)  # Wait for the motor to reach its position
+        print("Initialization complete. Ready to start.")
+
         input("Press Enter to begin the automated sequence...")
         main_sequence()
     except KeyboardInterrupt:

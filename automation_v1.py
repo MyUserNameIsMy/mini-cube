@@ -139,7 +139,7 @@ def move_x_one_cell():
     motor2_x.set_mode('VELOCITY_MODE')
     time.sleep(0.05)
 
-    motor1_x.move_forward()
+    motor1_x.move_backward()
     motor2_x.move_forward()
 
     time.sleep(1.5)
@@ -188,8 +188,8 @@ def main_sequence():
     # --- Step 2: Move to the drop-off location ---
     print("\n[PHASE 2: TRAVEL]")
     move_y_one_cell()
-    move_y_one_cell()
     control_servos('LIFT')
+    move_x_one_cell()
     move_x_one_cell()
 
     # --- Step 3: Drop off the box ---

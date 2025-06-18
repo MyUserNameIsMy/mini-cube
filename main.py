@@ -9,10 +9,13 @@ from minicubebase import MotorV1, MotorV2
 
 # === Servo Setup ===
 SERVO_PINS = [12, 16]
+MAGNET = 6
+
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(SERVO_PINS[0], GPIO.OUT)
 GPIO.setup(SERVO_PINS[1], GPIO.OUT)
+GPIO.setup(MAGNET, GPIO.OUT, initial=GPIO.LOW)
 
 
 pwm1 = GPIO.PWM(SERVO_PINS[0], 50)
@@ -124,6 +127,12 @@ try:
         elif key == 's':
             selected[0].move_backward()
             selected[1].move_forward()
+        elif key == 't':
+            GPIO.output(MAGNET, GPIO.HIGH)
+            print("MAGNET -> ON")
+        elif key == 'o':
+            GPIO.output(MAGNET, GPIO.LOW)
+            print("MAGNET -> OFF")
         elif key == 'q':
             print("Exiting...")
             break

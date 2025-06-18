@@ -126,8 +126,8 @@ def move_y_one_cell():
     motor2_y.set_mode(MOTOR_V2_ORIGINAL_MODE)
     time.sleep(0.05)
 
-    motor1_y.move_deg(-200)
-    motor2_y.move_deg(200)
+    motor1_y.move_deg(-400)
+    motor2_y.move_deg(400)
     time.sleep(1)
     print("   ...Cell movement finished.")
 
@@ -139,8 +139,8 @@ def move_x_one_cell():
     motor2_x.set_mode('VELOCITY_MODE')
     time.sleep(0.05)
 
-    motor1_x.move_backward()
-    motor2_x.move_forward()
+    motor1_x.move_forward()
+    motor2_x.move_backward()
 
     time.sleep(1.5)
     while GPIO.input(HALL_X) == GPIO.HIGH: time.sleep(0.05)

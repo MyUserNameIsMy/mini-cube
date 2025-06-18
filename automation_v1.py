@@ -126,8 +126,8 @@ def move_y_one_cell():
     motor2_y.set_mode(MOTOR_V2_ORIGINAL_MODE)
     time.sleep(0.05)
 
-    motor1_y.move_deg(-300)
-    motor2_y.move_deg(300)
+    motor1_y.move_deg(-600)
+    motor2_y.move_deg(600)
     time.sleep(1)
     print("   ...Cell movement finished.")
 
@@ -196,7 +196,7 @@ def main_sequence():
     print("\n[PHASE 3: DROPOFF]")
     control_z_axis(Z_AXIS_LOWER_FOR_DROPOFF_DEG) # Use the lower placement value
     control_magnet('OFF')
-    control_z_axis(Z_AXIS_RAISE_AFTER_DROPOFF_DEG) # Return to normal height
+    control_z_axis(Z_AXIS_HOME_POSITION_DEG) # Return to normal height
 
     # --- Step 4: Reset servo positions ---
     print("\n[PHASE 4: RESET]")

@@ -126,8 +126,8 @@ def move_y_one_cell():
     motor2_y.set_mode(MOTOR_V2_ORIGINAL_MODE)
     time.sleep(0.05)
 
-    motor1_y.move_deg(-400)
-    motor2_y.move_deg(400)
+    motor1_y.move_deg(-800)
+    motor2_y.move_deg(800)
     time.sleep(1)
     print("   ...Cell movement finished.")
 

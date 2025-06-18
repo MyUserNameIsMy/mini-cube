@@ -6,15 +6,15 @@ from minicubebase import MotorV1, MotorV2
 
 # === Hardware PIN & Device Configuration ===
 SERVO_PINS = [12, 16]
-HALL_Y = 5
-HALL_X = 4
+HALL_Y = 4
+HALL_X = 5
 MAGNET_PIN = 6
 DEVICE_NAME = '/dev/ttyUSB0'
 
 # === Constants for Movement ===
 
 # --- NEW: Added a home position for the Z-axis ---
-Z_AXIS_HOME_POSITION_DEG = 13000
+Z_AXIS_HOME_POSITION_DEG = 14000
 
 # --- IMPROVED: Specific Z-Axis positions for pickup and drop-off ---
 Z_AXIS_LOWER_FOR_PICKUP_DEG = -6000  # Position to lower to when picking up
@@ -142,7 +142,7 @@ def move_x_one_cell():
     motor1_x.move_forward()
     motor2_x.move_backward()
 
-    time.sleep(4.5)
+    time.sleep(1.5)
     while GPIO.input(HALL_X) == GPIO.HIGH: time.sleep(0.05)
 
     motor1_x.stop_move()

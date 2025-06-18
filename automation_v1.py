@@ -1,6 +1,6 @@
 import sys
 import time
-import threading  # Re-imported threading
+import threading
 import RPi.GPIO as GPIO
 from minicubebase import MotorV1, MotorV2
 
@@ -12,8 +12,11 @@ MAGNET_PIN = 6
 DEVICE_NAME = '/dev/ttyUSB0'
 
 # === Constants for Movement ===
-Z_AXIS_LOWER_DEG = -6000
-Z_AXIS_RAISE_DEG = 6000
+# --- IMPROVED: Specific Z-Axis positions for pickup and drop-off ---
+Z_AXIS_LOWER_FOR_PICKUP_DEG = -5000  # Position to lower to when picking up
+Z_AXIS_RAISE_AFTER_PICKUP_DEG = 6000   # Lift HIGHER after grabbing the box to ensure clearance
+Z_AXIS_LOWER_FOR_DROPOFF_DEG = -5200 # Go LOWER when placing the box to ensure contact
+Z_AXIS_RAISE_AFTER_DROPOFF_DEG = 5000  # Return to a standard height after dropping off
 
 SERVO_LIFT_ANGLE_1 = 95
 SERVO_LIFT_ANGLE_2 = 110
@@ -34,11 +37,10 @@ pwm1.start(0)
 pwm2.start(0)
 
 # === Shared variables for Threaded Servo Control ===
-# These variables are shared between the main thread and the servo control threads.
 servo1_angle = 0
 servo2_angle = 0
 servo_running = True
-servo_lock = threading.Lock()  # To prevent race conditions when accessing angles
+servo_lock = threading.Lock()
 
 
 def set_angle_loop(pwm, get_angle_func, lock):
@@ -49,11 +51,9 @@ def set_angle_loop(pwm, get_angle_func, lock):
     while servo_running:
         with lock:
             angle = get_angle_func()
-
-        # The formula to convert angle (0-180) to duty cycle (2-12)
         duty_cycle = 2 + (angle / 18.0)
         pwm.ChangeDutyCycle(duty_cycle)
-        time.sleep(0.05)  # Refresh rate for the servo signal
+        time.sleep(0.05)
 
 
 # === Motor Initialization ===
@@ -92,12 +92,13 @@ def control_magnet(state):
     time.sleep(0.5)
 
 
-def control_z_axis(direction):
-    """Lowers or raises the Z-axis motor."""
-    move_deg = Z_AXIS_LOWER_DEG if direction.upper() == 'LOWER' else Z_AXIS_RAISE_DEG
-    print(f"-> {direction.capitalize()}ing Z-axis by {move_deg} degrees")
-    motor1_z.move_deg(move_deg)
-    time.sleep(2)
+# --- IMPROVED: This function now moves to a specific target degree ---
+def control_z_axis(target_position_deg):
+    """Moves the Z-axis motor to a specific degree position."""
+    print(f"-> Moving Z-axis to position: {target_position_deg} degrees")
+    motor1_z.move_deg(target_position_deg)
+    # The sleep time might need adjustment depending on the travel distance
+    time.sleep(2.5)
 
 
 def move_y_one_cell():
@@ -155,11 +156,9 @@ def move_x_one_cell():
 
 
 def control_servos(state):
-    """
-    Lifts or lowers the servos by updating the target angles for the background threads.
-    """
+    """Lifts or lowers the servos by updating the target angles for the background threads."""
     global servo1_angle, servo2_angle
-    with servo_lock:  # Use the lock to safely modify the shared variables
+    with servo_lock:
         if state.upper() == 'LIFT':
             print(f"-> Setting servo target angles to: LIFT ({SERVO_LIFT_ANGLE_1}, {SERVO_LIFT_ANGLE_2})")
             servo1_angle = SERVO_LIFT_ANGLE_1
@@ -168,49 +167,47 @@ def control_servos(state):
             print(f"-> Setting servo target angles to: LOWER ({SERVO_LOWER_ANGLE})")
             servo1_angle = SERVO_LOWER_ANGLE
             servo2_angle = SERVO_LOWER_ANGLE
-    # Give the servos time to physically move to the new target position
     time.sleep(1)
 
 
 # === Main Execution Sequence ===
 def main_sequence():
-    """Executes the main task sequence."""
+    """Executes the main task sequence with improved height control."""
     print("\n--- Starting Main Sequence ---")
 
-    control_z_axis('LOWER')
+    # --- Step 1: Pick up the box ---
+    print("\n[PHASE 1: PICKUP]")
+    control_z_axis(Z_AXIS_LOWER_FOR_PICKUP_DEG)
     control_magnet('ON')
-    control_z_axis('RAISE')
+    control_z_axis(Z_AXIS_RAISE_AFTER_PICKUP_DEG)  # Use the higher lift value
 
+    # --- Step 2: Move to the drop-off location ---
+    print("\n[PHASE 2: TRAVEL]")
     move_y_one_cell()
     move_y_one_cell()
-
     control_servos('LIFT')
-
     move_x_one_cell()
 
-    control_z_axis('LOWER')
+    # --- Step 3: Drop off the box ---
+    print("\n[PHASE 3: DROPOFF]")
+    control_z_axis(Z_AXIS_LOWER_FOR_DROPOFF_DEG) # Use the lower placement value
     control_magnet('OFF')
-    control_z_axis('RAISE')
+    control_z_axis(Z_AXIS_RAISE_AFTER_DROPOFF_DEG) # Return to normal height
 
+    # --- Step 4: Reset servo positions ---
+    print("\n[PHASE 4: RESET]")
     control_servos('LOWER')
 
     print("\n--- Main Sequence Complete ---")
 
 
 if __name__ == "__main__":
-    # Helper functions to pass to the thread
-    def get_servo1_angle():
-        return servo1_angle
+    def get_servo1_angle(): return servo1_angle
+    def get_servo2_angle(): return servo2_angle
 
-
-    def get_servo2_angle():
-        return servo2_angle
-
-
-    # Create and start the servo threads
     servo_thread_1 = threading.Thread(target=set_angle_loop, args=(pwm1, get_servo1_angle, servo_lock))
     servo_thread_2 = threading.Thread(target=set_angle_loop, args=(pwm2, get_servo2_angle, servo_lock))
-    servo_thread_1.daemon = True  # Daemon threads exit when the main program exits
+    servo_thread_1.daemon = True
     servo_thread_2.daemon = True
     servo_thread_1.start()
     servo_thread_2.start()
@@ -224,13 +221,11 @@ if __name__ == "__main__":
     finally:
         print("\nExiting and cleaning up...")
 
-        # Gracefully stop the servo threads
         print("Stopping servo threads...")
-        servo_running = False  # Signal threads to exit their loops
-        servo_thread_1.join()  # Wait for threads to finish
+        servo_running = False
+        servo_thread_1.join()
         servo_thread_2.join()
 
-        # Stop all hardware
         for m in motors:
             m.stop_move()
             m.disable_torque()

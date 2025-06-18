@@ -14,7 +14,7 @@ DEVICE_NAME = '/dev/ttyUSB0'
 # === Constants for Movement ===
 
 # --- NEW: Added a home position for the Z-axis ---
-Z_AXIS_HOME_POSITION_DEG = 10000
+Z_AXIS_HOME_POSITION_DEG = 13000
 
 # --- IMPROVED: Specific Z-Axis positions for pickup and drop-off ---
 Z_AXIS_LOWER_FOR_PICKUP_DEG = -6000  # Position to lower to when picking up
@@ -139,8 +139,8 @@ def move_x_one_cell():
     motor2_x.set_mode('VELOCITY_MODE')
     time.sleep(0.05)
 
-    motor1_x.move_backward()
-    motor2_x.move_forward()
+    motor1_x.move_forward()
+    motor2_x.move_backward()
 
     time.sleep(4.5)
     while GPIO.input(HALL_X) == GPIO.HIGH: time.sleep(0.05)
@@ -187,10 +187,10 @@ def main_sequence():
 
     # --- Step 2: Move to the drop-off location ---
     print("\n[PHASE 2: TRAVEL]")
-    move_x_one_cell()
-    move_x_one_cell()
-    control_servos('LIFT')
     move_y_one_cell()
+    move_y_one_cell()
+    control_servos('LIFT')
+    move_x_one_cell()
 
     # --- Step 3: Drop off the box ---
     print("\n[PHASE 3: DROPOFF]")

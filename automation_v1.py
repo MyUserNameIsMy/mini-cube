@@ -6,8 +6,8 @@ from minicubebase import MotorV1, MotorV2
 
 # === Hardware PIN & Device Configuration ===
 SERVO_PINS = [12, 16]
-HALL_Y = 4
-HALL_X = 5
+HALL_Y = 5
+HALL_X = 4
 MAGNET_PIN = 6
 DEVICE_NAME = '/dev/ttyUSB0'
 

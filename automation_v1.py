@@ -139,10 +139,10 @@ def move_x_one_cell():
     motor2_x.set_mode('VELOCITY_MODE')
     time.sleep(0.05)
 
-    motor1_x.move_forward()
-    motor2_x.move_backward()
+    motor1_x.move_backward()
+    motor2_x.move_forward()
 
-    time.sleep(1.5)
+    time.sleep(4.5)
     while GPIO.input(HALL_X) == GPIO.HIGH: time.sleep(0.05)
 
     motor1_x.stop_move()
@@ -153,8 +153,8 @@ def move_x_one_cell():
     motor2_x.set_mode(MOTOR_V2_ORIGINAL_MODE)
     time.sleep(0.05)
 
-    motor1_x.move_deg(-200)
-    motor2_x.move_deg(200)
+    motor1_x.move_deg(200)
+    motor2_x.move_deg(-200)
     time.sleep(1)
     print("   ...Cell movement finished.")
 
@@ -187,10 +187,10 @@ def main_sequence():
 
     # --- Step 2: Move to the drop-off location ---
     print("\n[PHASE 2: TRAVEL]")
-    move_y_one_cell()
+    move_x_one_cell()
+    move_x_one_cell()
     control_servos('LIFT')
-    move_x_one_cell()
-    move_x_one_cell()
+    move_y_one_cell()
 
     # --- Step 3: Drop off the box ---
     print("\n[PHASE 3: DROPOFF]")

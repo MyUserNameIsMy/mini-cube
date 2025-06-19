@@ -171,6 +171,7 @@ def move_x_one_cell(direction):
 
     motor1_x.stop_move()
     motor2_x.stop_move()
+    time.sleep(1)
 
 
 def adjustment(motor1, motor2, direction, deg):

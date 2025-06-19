@@ -67,6 +67,8 @@ motor2_x = MotorV2(DEVICE_NAME, 1)
 motor1_y = MotorV1(DEVICE_NAME, 3)
 motor2_y = MotorV2(DEVICE_NAME, 2)
 
+motor1_z.set_speed(300)
+
 motors = [motor1_z, motor1_x, motor1_y, motor2_x, motor2_y]
 for m in motors:
     m.enable_torque()

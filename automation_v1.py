@@ -223,19 +223,19 @@ def main_sequence():
     move_x_one_cell('FORWARD')
     adjustment(motor1_x, motor2_x, 'FORWARD', 200)
     control_servos('LOWER')
-    move_y_one_cell('BACKWARD')
-    move_y_one_cell('BACKWARD')
-    adjustment(motor1_y, motor2_y, 'FORWARD', 200)
-    control_servos('LIFT')
-    move_x_one_cell('BACKWARD')
 
     print("\n[PHASE 3: DROPOFF]")
     control_z_axis(Z_AXIS_LOWER_FOR_DROPOFF_DEG) # Use the lower placement value
     control_magnet('OFF')
     motor1_z.set_deg(Z_AXIS_HOME_POSITION_DEG) # Return to normal height
 
-    print("\n--- Main Sequence Complete ---")
+    move_y_one_cell('BACKWARD')
+    move_y_one_cell('BACKWARD')
+    adjustment(motor1_y, motor2_y, 'FORWARD', 200)
+    control_servos('LIFT')
+    move_x_one_cell('BACKWARD')
 
+    print("\n--- Main Sequence Complete ---")
 
 if __name__ == "__main__":
     def get_servo1_angle():

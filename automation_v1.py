@@ -18,8 +18,8 @@ Z_AXIS_HOME_POSITION_DEG = 12500
 
 # --- IMPROVED: Specific Z-Axis positions for pickup and drop-off ---
 Z_AXIS_LOWER_FOR_PICKUP_DEG = -6000  # Position to lower to when picking up
-Z_AXIS_RAISE_AFTER_PICKUP_DEG = 7000   # Lift HIGHER after grabbing the box to ensure clearance
-Z_AXIS_LOWER_FOR_DROPOFF_DEG = -7000 # Go LOWER when placing the box to ensure contact
+Z_AXIS_RAISE_AFTER_PICKUP_DEG = 7000  # Lift HIGHER after grabbing the box to ensure clearance
+Z_AXIS_LOWER_FOR_DROPOFF_DEG = -7000  # Go LOWER when placing the box to ensure contact
 Z_AXIS_RAISE_AFTER_DROPOFF_DEG = Z_AXIS_HOME_POSITION_DEG  # Return to a standard height after dropping off
 
 SERVO_LIFT_ANGLE_1 = 95
@@ -147,6 +147,20 @@ def move_x_one_cell(direction):
     motor2_x.stop_move()
 
 
+def adjustment(motor1, motor2, direction, deg):
+    motor1.set_mode(MOTOR_V1_ORIGINAL_MODE)
+    motor2.set_mode(MOTOR_V2_ORIGINAL_MODE)
+    time.sleep(0.05)
+    if direction == 'FORWARD':
+        motor1.move_deg(-deg)
+        motor2.move_deg(deg)
+    elif direction == 'BACKWARD':
+        motor1.move_deg(deg)
+        motor2.move_deg(-deg)
+    time.sleep(1)
+    motor1.stop_move()
+    motor2.stop_move()
+
 def control_servos(state):
     """Lifts or lowers the servos by updating the target angles for the background threads."""
     global servo1_angle, servo2_angle
@@ -176,6 +190,8 @@ def main_sequence():
     # --- Step 2: Move to the drop-off location ---
     print("\n[PHASE 2: TRAVEL]")
     move_y_one_cell('FORWARD')
+    move_y_one_cell('FORWARD')
+    adjustment(motor1_y, motor2_y, 'FORWARD', 600)
 
     # move_x_one_cell()
     # control_servos('LIFT')
@@ -195,8 +211,13 @@ def main_sequence():
 
 
 if __name__ == "__main__":
-    def get_servo1_angle(): return servo1_angle
-    def get_servo2_angle(): return servo2_angle
+    def get_servo1_angle():
+        return servo1_angle
+
+
+    def get_servo2_angle():
+        return servo2_angle
+
 
     servo_thread_1 = threading.Thread(target=set_angle_loop, args=(pwm1, get_servo1_angle, servo_lock))
     servo_thread_2 = threading.Thread(target=set_angle_loop, args=(pwm2, get_servo2_angle, servo_lock))

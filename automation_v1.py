@@ -14,7 +14,7 @@ DEVICE_NAME = '/dev/ttyUSB0'
 # === Constants for Movement ===
 
 # --- NEW: Added a home position for the Z-axis ---
-Z_AXIS_HOME_POSITION_DEG = 10000
+Z_AXIS_HOME_POSITION_DEG = 11800
 
 # --- IMPROVED: Specific Z-Axis positions for pickup and drop-off ---
 Z_AXIS_LOWER_FOR_PICKUP_DEG = -6000  # Position to lower to when picking up
@@ -218,11 +218,16 @@ def main_sequence():
     print("\n[PHASE 2: TRAVEL]")
     move_y_one_cell('FORWARD')
     move_y_one_cell('FORWARD')
-    adjustment(motor1_y, motor2_y, 'FORWARD', 400)
+    adjustment(motor1_y, motor2_y, 'FORWARD', 500)
     control_servos('LIFT')
     move_x_one_cell('FORWARD')
-    adjustment(motor1_x, motor2_x, 'FORWARD', 100)
+    adjustment(motor1_x, motor2_x, 'FORWARD', 200)
     control_servos('LOWER')
+    move_y_one_cell('BACKWARD')
+    move_y_one_cell('BACKWARD')
+    adjustment(motor1_y, motor2_y, 'FORWARD', 200)
+    control_servos('LIFT')
+    move_x_one_cell('BACKWARD')
 
     print("\n[PHASE 3: DROPOFF]")
     control_z_axis(Z_AXIS_LOWER_FOR_DROPOFF_DEG) # Use the lower placement value

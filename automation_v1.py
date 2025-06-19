@@ -205,7 +205,7 @@ def main_sequence():
     print("\n[PHASE 2: TRAVEL]")
     move_y_one_cell('FORWARD')
     move_y_one_cell('FORWARD')
-    adjustment(motor1_y, motor2_y, 'FORWARD', 700)
+    adjustment(motor1_y, motor2_y, 'FORWARD', 200)
     control_servos('LIFT')
 
     # move_x_one_cell()

@@ -184,7 +184,7 @@ def adjustment(motor1, motor2, direction, deg):
     elif direction == 'BACKWARD':
         motor1.move_deg(deg)
         motor2.move_deg(-deg)
-    time.sleep(2)
+    time.sleep(3)
     motor1.stop_move()
     motor2.stop_move()
 
@@ -218,9 +218,10 @@ def main_sequence():
     print("\n[PHASE 2: TRAVEL]")
     move_y_one_cell('FORWARD')
     move_y_one_cell('FORWARD')
-    adjustment(motor1_y, motor2_y, 'FORWARD', 250)
+    adjustment(motor1_y, motor2_y, 'FORWARD', 300)
     control_servos('LIFT')
     move_x_one_cell('FORWARD')
+    adjustment(motor1_x, motor2_x, 'FORWARD', 100)
     control_servos('LOWER')
 
     print("\n[PHASE 3: DROPOFF]")

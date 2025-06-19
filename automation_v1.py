@@ -223,7 +223,7 @@ def main_sequence():
     adjustment(motor1_y, motor2_y, 'FORWARD', 500)
     control_servos('LIFT')
     move_x_one_cell('FORWARD')
-    adjustment(motor1_x, motor2_x, 'FORWARD', 400)
+    adjustment(motor1_x, motor2_x, 'FORWARD', 500)
     control_servos('LOWER')
 
     print("\n[PHASE 3: DROPOFF]")
@@ -235,10 +235,10 @@ def main_sequence():
 
     move_y_one_cell('BACKWARD')
     move_y_one_cell('BACKWARD', False)
-    adjustment(motor1_y, motor2_y, 'FORWARD', 600)
+    adjustment(motor1_y, motor2_y, 'FORWARD', 900)
     control_servos('LIFT')
     move_x_one_cell('BACKWARD', False)
-    adjustment(motor1_x, motor2_x, 'FORWARD', 600)
+    adjustment(motor1_x, motor2_x, 'FORWARD', 900)
 
     print("\n--- Main Sequence Complete ---")
 

@@ -110,7 +110,7 @@ def control_z_axis(target_position_deg):
 def move_y_one_cell(direction):
     """Moves the robot forward by one 'cell' using the Y-axis motors and HALL_Y sensor."""
     print("-> Moving forward one cell (Y-axis)...")
-    motor1_y.set_mode('WHEEL_MOgDE')
+    motor1_y.set_mode('WHEEL_MODE')
     motor2_y.set_mode('VELOCITY_MODE')
     time.sleep(0.05)
 

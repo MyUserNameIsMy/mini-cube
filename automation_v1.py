@@ -221,7 +221,6 @@ def main_sequence():
     adjustment(motor1_y, motor2_y, 'FORWARD', 250)
     control_servos('LIFT')
     move_x_one_cell('FORWARD')
-    adjustment(motor1_x, motor2_x, 'FORWARD', 200)
     control_servos('LOWER')
 
     print("\n[PHASE 3: DROPOFF]")

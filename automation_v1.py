@@ -107,7 +107,7 @@ def control_z_axis(target_position_deg):
     time.sleep(2.5)
 
 
-def move_y_one_cell(direction):
+def move_y_one_cell(direction, move_further=True):
     """Moves the robot forward by one 'cell' using the Y-axis motors and HALL_Y sensor."""
     print("-> Moving forward one cell (Y-axis)...")
     motor1_y.set_mode('WHEEL_MODE')
@@ -127,20 +127,21 @@ def move_y_one_cell(direction):
     motor1_y.stop_move()
     motor2_y.stop_move()
 
-    if direction == 'FORWARD':
-        motor1_y.move_backward()
-        motor2_y.move_forward()
-    elif direction == 'BACKWARD':
-        motor1_y.move_forward()
-        motor2_y.move_backward()
+    if move_further:
+        if direction == 'FORWARD':
+            motor1_y.move_backward()
+            motor2_y.move_forward()
+        elif direction == 'BACKWARD':
+            motor1_y.move_forward()
+            motor2_y.move_backward()
 
-    while GPIO.input(HALL_Y) == GPIO.LOW: time.sleep(0.05)
+        while GPIO.input(HALL_Y) == GPIO.LOW: time.sleep(0.05)
 
-    motor1_y.stop_move()
-    motor2_y.stop_move()
+        motor1_y.stop_move()
+        motor2_y.stop_move()
 
 
-def move_x_one_cell(direction):
+def move_x_one_cell(direction, move_further=True):
     """Moves the robot sideways by one 'cell' using the X-axis motors and HALL_X sensor."""
     print("-> Moving forward one cell (X-axis)...")
     motor1_x.set_mode('WHEEL_MODE')
@@ -160,18 +161,19 @@ def move_x_one_cell(direction):
     motor1_x.stop_move()
     motor2_x.stop_move()
 
-    if direction == 'FORWARD':
-        motor1_x.move_backward()
-        motor2_x.move_forward()
-    elif direction == 'BACKWARD':
-        motor1_x.move_forward()
-        motor2_x.move_backward()
+    if move_further:
+        if direction == 'FORWARD':
+            motor1_x.move_backward()
+            motor2_x.move_forward()
+        elif direction == 'BACKWARD':
+            motor1_x.move_forward()
+            motor2_x.move_backward()
 
-    while GPIO.input(HALL_Y) == GPIO.LOW: time.sleep(0.05)
+        while GPIO.input(HALL_Y) == GPIO.LOW: time.sleep(0.05)
 
-    motor1_x.stop_move()
-    motor2_x.stop_move()
-    time.sleep(1)
+        motor1_x.stop_move()
+        motor2_x.stop_move()
+        time.sleep(1)
 
 
 def adjustment(motor1, motor2, direction, deg):
@@ -230,10 +232,10 @@ def main_sequence():
     motor1_z.set_deg(Z_AXIS_HOME_POSITION_DEG) # Return to normal height
 
     move_y_one_cell('BACKWARD')
-    move_y_one_cell('BACKWARD')
+    move_y_one_cell('BACKWARD', False)
     adjustment(motor1_y, motor2_y, 'FORWARD', 200)
     control_servos('LIFT')
-    move_x_one_cell('BACKWARD')
+    move_x_one_cell('BACKWARD', False)
 
     print("\n--- Main Sequence Complete ---")
 

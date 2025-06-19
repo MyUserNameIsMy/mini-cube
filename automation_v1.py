@@ -6,20 +6,20 @@ from minicubebase import MotorV1, MotorV2
 
 # === Hardware PIN & Device Configuration ===
 SERVO_PINS = [12, 16]
-HALL_Y = 4
-HALL_X = 5
+HALL_Y = 5
+HALL_X = 4
 MAGNET_PIN = 6
 DEVICE_NAME = '/dev/ttyUSB0'
 
 # === Constants for Movement ===
 
 # --- NEW: Added a home position for the Z-axis ---
-Z_AXIS_HOME_POSITION_DEG = 8800
+Z_AXIS_HOME_POSITION_DEG = 8200
 
 # --- IMPROVED: Specific Z-Axis positions for pickup and drop-off ---
 Z_AXIS_LOWER_FOR_PICKUP_DEG = -6000  # Position to lower to when picking up
-Z_AXIS_RAISE_AFTER_PICKUP_DEG = 7000  # Lift HIGHER after grabbing the box to ensure clearance
-Z_AXIS_LOWER_FOR_DROPOFF_DEG = -7000  # Go LOWER when placing the box to ensure contact
+Z_AXIS_RAISE_AFTER_PICKUP_DEG = 6000  # Lift HIGHER after grabbing the box to ensure clearance
+Z_AXIS_LOWER_FOR_DROPOFF_DEG = -6000  # Go LOWER when placing the box to ensure contact
 Z_AXIS_RAISE_AFTER_DROPOFF_DEG = Z_AXIS_HOME_POSITION_DEG  # Return to a standard height after dropping off
 
 SERVO_LIFT_ANGLE_1 = 95
@@ -191,7 +191,7 @@ def main_sequence():
     print("\n[PHASE 2: TRAVEL]")
     move_y_one_cell('FORWARD')
     move_y_one_cell('FORWARD')
-    adjustment(motor1_y, motor2_y, 'FORWARD', 400)
+    adjustment(motor1_y, motor2_y, 'FORWARD', 250)
     control_servos('LIFT')
 
     # move_x_one_cell()

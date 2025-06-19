@@ -14,7 +14,7 @@ DEVICE_NAME = '/dev/ttyUSB0'
 # === Constants for Movement ===
 
 # --- NEW: Added a home position for the Z-axis ---
-Z_AXIS_HOME_POSITION_DEG = 8800
+Z_AXIS_HOME_POSITION_DEG = 12800
 
 # --- IMPROVED: Specific Z-Axis positions for pickup and drop-off ---
 Z_AXIS_LOWER_FOR_PICKUP_DEG = -6000  # Position to lower to when picking up
@@ -217,9 +217,10 @@ def main_sequence():
     print("\n[PHASE 2: TRAVEL]")
     move_y_one_cell('FORWARD')
     move_y_one_cell('FORWARD')
-    adjustment(motor1_y, motor2_y, 'FORWARD', 200)
+    adjustment(motor1_y, motor2_y, 'FORWARD', 300)
     control_servos('LIFT')
     move_x_one_cell('FORWARD')
+    adjustment(motor1_y, motor2_y, 'FORWARD', 600)
     control_servos('LOWER')
 
     print("\n[PHASE 3: DROPOFF]")
@@ -256,6 +257,7 @@ if __name__ == "__main__":
 
         input("Press Enter to begin the automated sequence...")
         main_sequence()
+
     except KeyboardInterrupt:
         print("\nProgram interrupted by user.")
     finally:

@@ -105,58 +105,46 @@ def control_z_axis(target_position_deg):
     time.sleep(2.5)
 
 
-def move_y_one_cell():
+def move_y_one_cell(direction):
     """Moves the robot forward by one 'cell' using the Y-axis motors and HALL_Y sensor."""
     print("-> Moving forward one cell (Y-axis)...")
     motor1_y.set_mode('WHEEL_MODE')
     motor2_y.set_mode('VELOCITY_MODE')
     time.sleep(0.05)
 
-    motor1_y.move_backward()
-    motor2_y.move_forward()
+    if direction == 'FORWARD':
+        motor1_y.move_backward()
+        motor2_y.move_forward()
+    elif direction == 'BACKWARD':
+        motor1_y.move_forward()
+        motor2_y.move_backward()
 
     time.sleep(1.5)
     while GPIO.input(HALL_Y) == GPIO.HIGH: time.sleep(0.05)
 
     motor1_y.stop_move()
     motor2_y.stop_move()
-    print("   ...Cell boundary detected.")
-
-    motor1_y.set_mode(MOTOR_V1_ORIGINAL_MODE)
-    motor2_y.set_mode(MOTOR_V2_ORIGINAL_MODE)
-    time.sleep(0.05)
-
-    motor1_y.move_deg(-600)
-    motor2_y.move_deg(600)
-    time.sleep(1)
-    print("   ...Cell movement finished.")
 
 
-def move_x_one_cell():
+def move_x_one_cell(direction):
     """Moves the robot sideways by one 'cell' using the X-axis motors and HALL_X sensor."""
     print("-> Moving forward one cell (X-axis)...")
     motor1_x.set_mode('WHEEL_MODE')
     motor2_x.set_mode('VELOCITY_MODE')
     time.sleep(0.05)
 
-    motor1_x.move_forward()
-    motor2_x.move_backward()
+    if direction == 'FORWARD':
+        motor1_x.move_backward()
+        motor2_x.move_forward()
+    elif direction == 'BACKWARD':
+        motor1_x.move_forward()
+        motor2_x.move_backward()
 
     time.sleep(1.5)
     while GPIO.input(HALL_X) == GPIO.HIGH: time.sleep(0.05)
 
     motor1_x.stop_move()
     motor2_x.stop_move()
-    print("   ...Cell boundary detected.")
-
-    motor1_x.set_mode(MOTOR_V1_ORIGINAL_MODE)
-    motor2_x.set_mode(MOTOR_V2_ORIGINAL_MODE)
-    time.sleep(0.05)
-
-    motor1_x.move_deg(200)
-    motor2_x.move_deg(-200)
-    time.sleep(1)
-    print("   ...Cell movement finished.")
 
 
 def control_servos(state):
@@ -187,20 +175,21 @@ def main_sequence():
 
     # --- Step 2: Move to the drop-off location ---
     print("\n[PHASE 2: TRAVEL]")
-    move_y_one_cell()
-    move_y_one_cell()
-    control_servos('LIFT')
-    move_x_one_cell()
+    move_x_one_cell('FORWARD')
 
-    # --- Step 3: Drop off the box ---
-    print("\n[PHASE 3: DROPOFF]")
-    control_z_axis(Z_AXIS_LOWER_FOR_DROPOFF_DEG) # Use the lower placement value
-    control_magnet('OFF')
-    motor1_z.set_deg(Z_AXIS_HOME_POSITION_DEG) # Return to normal height
-
-    # --- Step 4: Reset servo positions ---
-    print("\n[PHASE 4: RESET]")
-    control_servos('LOWER')
+    # move_x_one_cell()
+    # control_servos('LIFT')
+    # move_x_one_cell()
+    #
+    # # --- Step 3: Drop off the box ---
+    # print("\n[PHASE 3: DROPOFF]")
+    # control_z_axis(Z_AXIS_LOWER_FOR_DROPOFF_DEG) # Use the lower placement value
+    # control_magnet('OFF')
+    # motor1_z.set_deg(Z_AXIS_HOME_POSITION_DEG) # Return to normal height
+    #
+    # # --- Step 4: Reset servo positions ---
+    # print("\n[PHASE 4: RESET]")
+    # control_servos('LOWER')
 
     print("\n--- Main Sequence Complete ---")
 

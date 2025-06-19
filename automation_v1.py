@@ -127,6 +127,18 @@ def move_y_one_cell(direction):
     motor1_y.stop_move()
     motor2_y.stop_move()
 
+    if direction == 'FORWARD':
+        motor1_y.move_backward()
+        motor2_y.move_forward()
+    elif direction == 'BACKWARD':
+        motor1_y.move_forward()
+        motor2_y.move_backward()
+
+    while GPIO.input(HALL_Y) == GPIO.LOW: time.sleep(0.05)
+
+    motor1_y.stop_move()
+    motor2_y.stop_move()
+
 
 def move_x_one_cell(direction):
     """Moves the robot sideways by one 'cell' using the X-axis motors and HALL_X sensor."""

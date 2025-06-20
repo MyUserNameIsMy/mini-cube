@@ -221,10 +221,10 @@ def main_sequence():
     move_y_one_cell('FORWARD')
     move_y_one_cell('FORWARD')
     adjustment(motor1_y, motor2_y, 'FORWARD', 500)
-    control_servos('LIFT')
-    move_x_one_cell('FORWARD')
-    adjustment(motor1_x, motor2_x, 'FORWARD', 500)
-    control_servos('LOWER')
+    # control_servos('LIFT')
+    # move_x_one_cell('FORWARD')
+    # adjustment(motor1_x, motor2_x, 'FORWARD', 500)
+    # control_servos('LOWER')
 
     print("\n[PHASE 3: DROPOFF]")
     control_z_axis(Z_AXIS_LOWER_FOR_DROPOFF_DEG) # Use the lower placement value
@@ -236,9 +236,9 @@ def main_sequence():
     move_y_one_cell('BACKWARD')
     move_y_one_cell('BACKWARD', False)
     adjustment(motor1_y, motor2_y, 'FORWARD', 900)
-    control_servos('LIFT')
-    move_x_one_cell('BACKWARD', False)
-    adjustment(motor1_x, motor2_x, 'FORWARD', 900)
+    # control_servos('LIFT')
+    # move_x_one_cell('BACKWARD', False)
+    # adjustment(motor1_x, motor2_x, 'FORWARD', 900)
 
     print("\n--- Main Sequence Complete ---")
 

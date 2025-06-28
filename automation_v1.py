@@ -14,7 +14,7 @@ DEVICE_NAME = '/dev/ttyUSB0'
 # === Constants for Movement ===
 
 # --- NEW: Added a home position for the Z-axis ---
-Z_AXIS_HOME_POSITION_DEG = 11800
+Z_AXIS_HOME_POSITION_DEG = 13200
 
 # --- IMPROVED: Specific Z-Axis positions for pickup and drop-off ---
 Z_AXIS_LOWER_FOR_PICKUP_DEG = -6000  # Position to lower to when picking up

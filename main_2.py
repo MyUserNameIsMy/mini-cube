@@ -3,50 +3,26 @@ import tty
 import termios
 import select
 import time
-import threading
-import RPi.GPIO as GPIO
+from gpiozero import AngularServo, LED
 from minicubebase import MotorV1, MotorV2
 
-# === Servo Setup ===
-SERVO_PINS = [12, 13]
-MAGNET = 6
+# === gpiozero Setup ===
+# The AngularServo handles all PWM and cleanup.
+# We configure it for a standaard 180-degree servo.
+# Change max_angle to 120 if your servo is physically limited.
+servo1 = AngularServo(12, min_angle=0, max_angle=120, min_pulse_width=0.0009, max_pulse_width=0.003)
+servo2 = AngularServo(13, min_angle=0, max_angle=180, min_pulse_width=0.0005, max_pulse_width=0.0025)
 
-
-GPIO.setmode(GPIO.BCM)
-GPIO.setup(SERVO_PINS[0], GPIO.OUT)
-GPIO.setup(SERVO_PINS[1], GPIO.OUT)
-GPIO.setup(MAGNET, GPIO.OUT, initial=GPIO.LOW)
-
-
-pwm1 = GPIO.PWM(SERVO_PINS[0], 50)
-pwm2 = GPIO.PWM(SERVO_PINS[1], 50)
-pwm1.start(0)
-pwm2.start(0)
-
-# === Shared angles and control flags ===
-servo1_angle = 0
-servo2_angle = 0
-servo_running = True
-servo_lock = threading.Lock()
-
-# === Threaded angle update loops ===
-def set_angle_loop(pwm, get_angle_func):
-    while servo_running:
-        with servo_lock:
-            angle = get_angle_func()
-        duty_cycle = 2 + (angle / 18)
-        pwm.ChangeDutyCycle(duty_cycle)
-        time.sleep(0.1)
+# Using the LED class for the magnet provides a simple .on()/.off() interface
+magnet = LED(6)
 
 # === Motor Setup ===
 DEVICE_NAME = '/dev/ttyUSB0'
-
 motor1_z = MotorV1(DEVICE_NAME, 4)
 motor1_x = MotorV1(DEVICE_NAME, 1)
 motor2_x = MotorV1(DEVICE_NAME, 3)
 motor1_y = MotorV2(DEVICE_NAME, 1)
 motor2_y = MotorV2(DEVICE_NAME, 2)
-
 
 motors = [motor1_z, motor1_x, motor1_y, motor2_x, motor2_y]
 for m in motors:
@@ -56,17 +32,16 @@ motor1_x.set_mode('WHEEL_MODE')
 motor1_x.set_mode('WHEEL_MODE')
 motor2_y.set_mode('VELOCITY_MODE')
 motor2_y.set_mode('VELOCITY_MODE')
-
 motor1_z.set_mode('WHEEL_MODE')
 
 print("🕹️  Arrow ↑ selects motors 1 & 2 | ↓ selects motors 3 & 4")
 print("    Use [w] = forward | [s] = backward | [q] = quit")
-print("    Use ↑ for servos 80° & 78°, ↓ for servos 0°")
+print("    Use [t] = magnet ON | [o] = magnet OFF")
 
 # === Motor selection ===
 selected = [motor1_x, motor2_x]
 
-# === Terminal key handling ===
+# === Terminal key handling (unchanged) ===
 def get_key():
     if select.select([sys.stdin], [], [], 0.0)[0]:
         ch1 = sys.stdin.read(1)
@@ -87,36 +62,23 @@ def set_terminal_raw():
 def restore_terminal_settings(old_settings):
     termios.tcsetattr(sys.stdin.fileno(), termios.TCSADRAIN, old_settings)
 
-# === Start PWM threads ===
-def get_servo1_angle(): return servo1_angle
-def get_servo2_angle(): return servo2_angle
 
-servo_thread_1 = threading.Thread(target=set_angle_loop, args=(pwm1, get_servo1_angle))
-servo_thread_2 = threading.Thread(target=set_angle_loop, args=(pwm2, get_servo2_angle))
-servo_thread_1.daemon = True
-servo_thread_2.daemon = True
-servo_thread_1.start()
-servo_thread_2.start()
-
+# === Main Program Loop ===
 old_settings = set_terminal_raw()
 try:
     while True:
         key = get_key()
 
-        if key == '\x1b[A':  # Up Arrow - Select motors 1 & 2
+        if key == '\x1b[A':  # Up Arrow
             selected = [motor1_x, motor2_x]
-            print("↑ Selected motors 1 & 2")
-            with servo_lock:
-                servo1_angle = 110
-                servo2_angle = 95
-            print("Setting servos: pwm1 → 90°, pwm2 → 90°")
-        elif key == '\x1b[B':  # Down Arrow - Select motors 3 & 4
+            print("↑ Selected motors 1 & 2 | Setting servos to 110° & 95°")
+            servo1.angle = 65
+            servo2.angle = 95
+        elif key == '\x1b[B':  # Down Arrow
             selected = [motor1_y, motor2_y]
-            print("↓ Selected motors 3 & 4")
-            with servo_lock:
-                servo1_angle = 0
-                servo2_angle = 0
-            print("Setting servos: pwm1 → 0°, pwm2 → 0°")
+            print("↓ Selected motors 3 & 4 | Setting servos to 0°")
+            servo1.angle = 0
+            servo2.angle = 0
         elif key == 'u':
             motor1_z.move_forward()
         elif key == 'd':
@@ -128,30 +90,35 @@ try:
             selected[0].move_backward()
             selected[1].move_forward()
         elif key == 't':
-            GPIO.output(MAGNET, GPIO.HIGH)
+            magnet.on()
             print("MAGNET -> ON")
         elif key == 'o':
-            GPIO.output(MAGNET, GPIO.LOW)
+            magnet.off()
             print("MAGNET -> OFF")
         elif key == 'q':
             print("Exiting...")
             break
         elif key is not None:
+            # Stop motors on any other key press
             motor1_z.stop_move()
             for m in selected:
                 m.stop_move()
+        
         time.sleep(0.05)
 
 finally:
+    # --- Cleanup ---
     restore_terminal_settings(old_settings)
-    servo_running = False
-    servo_thread_1.join()
-    servo_thread_2.join()
+    
+    # Stop all motors from minicubebase
     for m in motors:
         m.stop_move()
         m.disable_torque()
         m.portHandler.closePort()
-    pwm1.stop()
-    pwm2.stop()
-    GPIO.cleanup()
-    print("Motors and servos stopped, GPIO cleaned up.")
+        
+    # Detach servos and turn off magnet (handled by gpiozero)
+    servo1.detach()
+    servo2.detach()
+    magnet.close()
+    
+    print("Motors and servos stopped, GPIO resources released.")

@@ -193,13 +193,15 @@ if __name__ == "__main__":
             command = input("Press (a) to calib or (r) to run:")
             if command == 'a':
                 while True:
-                    key = input("Press (a) to calib or (r) to run:")
+                    key = input("Press (u) to up or (d) to down:")
                     if key == 'u':
                         motor1_z.move_forward()
                         print("MOTOR1_Z", motor1_z.get_present_position())
                     elif key == 'd':
                         motor1_z.move_backward()
                         print("MOTOR1_Z", motor1_z.get_present_position())
+                    elif key == 'q':
+                        break
             elif command == 'r':
                 main_sequence()
 

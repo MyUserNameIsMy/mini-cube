@@ -20,6 +20,10 @@ LIFT_UP_ANGLE = 2048
 LIFT_DOWN_ANGLE = -2048
 
 
+Z_AXIS_HOME_POSITION_DEG = 8000
+Z_AXIS_PICKUP_DEG = -6000
+
+
 # === Motor Initialization ===
 motor1_z = MotorV1(DEVICE_NAME, 4)
 motor1_x = MotorV1(DEVICE_NAME, 1)
@@ -175,6 +179,16 @@ def adjustment(motor1, motor2, direction, deg, protocol):
 
 # === Main Execution Sequence ===
 def main_sequence():
+
+    motor1_z.set_deg(Z_AXIS_HOME_POSITION_DEG)
+    input("Press enter to continue...:")
+    motor1_z.move_deg(Z_AXIS_PICKUP_DEG)
+    input("Press enter to continue...:")
+    control_magnet('ON')
+    input("Press enter to continue...:")
+    motor1_z.set_deg(Z_AXIS_HOME_POSITION_DEG)
+    input("Press enter to continue...:")
+
     move_y_one_cell('FORWARD')
     move_y_one_cell('FORWARD')
     adjustment(motor1_y, motor2_y, 'BACKWARD', 800, 1)
@@ -189,21 +203,9 @@ def main_sequence():
 
 if __name__ == "__main__":
     try:
-        while True:
-            command = input("Press (a) to calib or (r) to run:")
-            if command == 'a':
-                while True:
-                    key = input("Press (u) to up or (d) to down:")
-                    if key == 'u':
-                        motor1_z.move_forward()
-                        print("MOTOR1_Z", motor1_z.get_present_position())
-                    elif key == 'd':
-                        motor1_z.move_backward()
-                        print("MOTOR1_Z", motor1_z.get_present_position())
-                    elif key == 'q':
-                        break
-            elif command == 'r':
-                main_sequence()
+
+        command = input("Press enter to start:")
+        main_sequence()
 
     except KeyboardInterrupt:
         print("\nProgram interrupted by user.")

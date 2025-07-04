@@ -178,6 +178,9 @@ def main_sequence():
     move_y_one_cell('FORWARD')
     move_y_one_cell('FORWARD')
     adjustment(motor1_y, motor2_y, 'BACKWARD', 800, 1)
+    lift_motor_1.move_deg(LIFT_UP_ANGLE)
+    lift_motor_2.move_deg(LIFT_UP_ANGLE)
+    move_x_one_cell('FORWARD')
     # control_servos('LIFT')
     # move_x_one_cell('FORWARD')
     # adjustment(motor1_x, motor2_x, 'FORWARD', 500)
@@ -186,8 +189,19 @@ def main_sequence():
 
 if __name__ == "__main__":
     try:
-        input("Press Enter to begin the automated sequence...")
-        main_sequence()
+        while True:
+            command = input("Press (a) to calib or (r) to run:")
+            if command == 'a':
+                while True:
+                    key = input("Press (a) to calib or (r) to run:")
+                    if key == 'u':
+                        motor1_z.move_forward()
+                        print("MOTOR1_Z", motor1_z.get_present_position())
+                    elif key == 'd':
+                        motor1_z.move_backward()
+                        print("MOTOR1_Z", motor1_z.get_present_position())
+            elif command == 'r':
+                main_sequence()
 
     except KeyboardInterrupt:
         print("\nProgram interrupted by user.")

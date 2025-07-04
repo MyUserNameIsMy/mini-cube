@@ -58,6 +58,14 @@ class MotorV2:
         print(f"set_mode({mode}) -> result: {res}, error: {err}")
         self.enable_torque()
 
+    def get_present_position(self):
+        # This method is required for cleanup
+        pos, res, err = self.packetHandler.read4ByteTxRx(self.portHandler, self.ID, self.ADDR["PRESENT_POSITION"])
+        if res != COMM_SUCCESS or err != 0:
+            print(f"get_present_position failed")
+            return -1
+        return pos
+
     def set_speed(self, speed):
         self.disable_torque()
         res, err = self.packetHandler.write4ByteTxRx(self.portHandler, self.ID, self.ADDR["GOAL_VELOCITY"], speed)

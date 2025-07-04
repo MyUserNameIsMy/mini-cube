@@ -79,7 +79,14 @@ class MotorV1:
 
     def set_speed(self, speed):
         self.disable_torque()
-        res, err = self.packetHandler.write2ByteTxRx(self.portHandler, self.ID, self.ADDR["MOVING_SPEED"], speed)
+        if not 0 <= speed <= 1023:
+            speed = max(0, min(speed, 1023))
+        motor_value = 0
+        if self.DIRECTION == "CW":
+            motor_value = 1024 + speed
+        else:
+            motor_value = speed
+        res, err = self.packetHandler.write2ByteTxRx(self.portHandler, self.ID, self.ADDR["MOVING_SPEED"], motor_value)
         print(
             f"set_speed -> result: {self.packetHandler.getTxRxResult(res)}, error: {self.packetHandler.getRxPacketError(err)}")
 

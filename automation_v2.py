@@ -38,8 +38,8 @@ lift_motor_2 = MotorV1(DEVICE_NAME, 7)
 motor1_z.set_speed(400)
 motor1_x.set_speed(1000)
 motor2_x.set_speed(1000)
-motor1_y.set_speed(2000)
-motor2_y.set_speed(2000)
+motor1_y.set_speed(1000)
+motor2_y.set_speed(1000)
 
 
 # === Setup ===

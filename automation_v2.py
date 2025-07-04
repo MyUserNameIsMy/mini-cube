@@ -38,6 +38,8 @@ motor1_z.set_speed(300)
 # GPIO setup for the magnet
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(MAGNET_PIN, GPIO.OUT, initial=GPIO.LOW)
+GPIO.setup(HALL_Y, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+GPIO.setup(HALL_X, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
 # Consolidate all motors
 motors = [motor1_z, motor1_x, motor1_y, motor2_x, motor2_y, lift_motor_1, lift_motor_2]

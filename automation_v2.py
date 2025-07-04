@@ -9,8 +9,8 @@ from minicubebase import MotorV1, MotorV2
 # === Configuration ===
 # --- Port and Pin Definitions ---
 DEVICE_NAME = '/dev/ttyUSB0'
-HALL_Y = 5
-HALL_X = 4
+HALL_Y = 4
+HALL_X = 5
 MAGNET_PIN = 6
 
 # --- Lift Motor Angles (in degrees) ---

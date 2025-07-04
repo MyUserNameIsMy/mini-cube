@@ -58,6 +58,14 @@ class MotorV2:
         print(f"set_mode({mode}) -> result: {res}, error: {err}")
         self.enable_torque()
 
+    def set_speed(self, speed):
+        self.disable_torque()
+        res, err = self.packetHandler.write4ByteTxRx(self.portHandler, self.ID, self.ADDR["GOAL_VELOCITY"], speed)
+        print(
+            f"set_speed -> result: {self.packetHandler.getTxRxResult(res)}, error: {self.packetHandler.getRxPacketError(err)}")
+
+        self.enable_torque()
+
     def move_forward(self, velocity=100):
         self.DIRECTION = "CW"
         res, err = self.packetHandler.write4ByteTxRx(self.portHandler, self.ID, self.ADDR["GOAL_VELOCITY"], velocity)

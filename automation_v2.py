@@ -32,6 +32,10 @@ lift_motor_1 = MotorV1(DEVICE_NAME, 5)
 lift_motor_2 = MotorV1(DEVICE_NAME, 7)
 
 motor1_z.set_speed(300)
+motor1_x.set_speed(1000)
+motor2_x.set_speed(1000)
+motor1_y.set_speed(1000)
+motor2_y.set_speed(1000)
 
 
 # === Setup ===
@@ -172,7 +176,7 @@ def adjustment(motor1, motor2, direction, deg):
 def main_sequence():
     move_y_one_cell('FORWARD')
     move_y_one_cell('FORWARD')
-    adjustment(motor1_y, motor2_y, 'FORWARD', 500)
+    adjustment(motor1_y, motor2_y, 'BACKWARD', 800)
     # control_servos('LIFT')
     # move_x_one_cell('FORWARD')
     # adjustment(motor1_x, motor2_x, 'FORWARD', 500)

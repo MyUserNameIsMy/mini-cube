@@ -158,9 +158,10 @@ def move_x_one_cell(direction, move_further=True):
         time.sleep(1)
 
 
-def adjustment(motor1, motor2, direction, deg):
-    motor1.set_mode(MOTOR_V1_ORIGINAL_MODE)
-    motor2.set_mode(MOTOR_V2_ORIGINAL_MODE)
+def adjustment(motor1, motor2, direction, deg, protocol):
+    mode = MOTOR_V1_ORIGINAL_MODE if protocol == 1 else MOTOR_V2_ORIGINAL_MODE
+    motor1.set_mode(mode)
+    motor2.set_mode(mode)
     time.sleep(0.05)
     if direction == 'FORWARD':
         motor1.move_deg(-deg)
@@ -176,7 +177,7 @@ def adjustment(motor1, motor2, direction, deg):
 def main_sequence():
     move_y_one_cell('FORWARD')
     move_y_one_cell('FORWARD')
-    adjustment(motor1_y, motor2_y, 'BACKWARD', 800)
+    adjustment(motor1_y, motor2_y, 'BACKWARD', 800, 1)
     # control_servos('LIFT')
     # move_x_one_cell('FORWARD')
     # adjustment(motor1_x, motor2_x, 'FORWARD', 500)

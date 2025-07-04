@@ -110,8 +110,10 @@ if __name__ == "__main__":
                 print("Selected motors 1 & 2 (Y-axis)")
             elif key == 'u':
                 motor1_z.move_forward()
+                print('MOTOR1_Z: ', motor1_z.get_present_position())
             elif key == 'd':
                 motor1_z.move_backward()
+                print('MOTOR1_Z: ', motor1_z.get_present_position())
             elif key == 'w':
                 selected[0].move_forward()
                 selected[1].move_backward()

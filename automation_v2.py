@@ -155,6 +155,7 @@ def move_x_one_cell(direction, move_further=True):
 
 
 def adjustment(motor1, motor2, direction, deg):
+    time.sleep(1)
     motor1.set_mode(MOTOR_V1_ORIGINAL_MODE)
     motor2.set_mode(MOTOR_V2_ORIGINAL_MODE)
     time.sleep(0.05)
@@ -172,7 +173,7 @@ def adjustment(motor1, motor2, direction, deg):
 def main_sequence():
     move_y_one_cell('FORWARD')
     move_y_one_cell('FORWARD')
-    adjustment(motor1_y, motor2_y, 'FORWARD', 500)
+    adjustment(motor1_y, motor2_y, 'BACKWARD', 2000)
     # control_servos('LIFT')
     # move_x_one_cell('FORWARD')
     # adjustment(motor1_x, motor2_x, 'FORWARD', 500)

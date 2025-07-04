@@ -20,8 +20,8 @@ LIFT_UP_ANGLE = 2048
 LIFT_DOWN_ANGLE = -2048
 
 
-Z_AXIS_HOME_POSITION_DEG = 8000
-Z_AXIS_PICKUP_DEG = -6000
+Z_AXIS_HOME_POSITION_DEG = 16000
+Z_AXIS_PICKUP_DEG = -14000
 
 
 # === Motor Initialization ===
@@ -35,7 +35,7 @@ motor2_y = MotorV2(DEVICE_NAME, 2)
 lift_motor_1 = MotorV1(DEVICE_NAME, 5)
 lift_motor_2 = MotorV1(DEVICE_NAME, 7)
 
-motor1_z.set_speed(300)
+motor1_z.set_speed(400)
 motor1_x.set_speed(1000)
 motor2_x.set_speed(1000)
 motor1_y.set_speed(1000)
@@ -131,7 +131,7 @@ def move_x_one_cell(direction, move_further=True):
     """Moves the robot sideways by one 'cell' using the X-axis motors and HALL_X sensor."""
     print("-> Moving forward one cell (X-axis)...")
     motor1_x.set_mode('WHEEL_MODE')
-    motor2_x.set_mode('VELOCITY_MODE')
+    motor2_x.set_mode('WHEEL_MODE')
     time.sleep(0.05)
 
     if direction == 'FORWARD':
@@ -181,20 +181,51 @@ def adjustment(motor1, motor2, direction, deg, protocol):
 def main_sequence():
 
     motor1_z.set_deg(Z_AXIS_HOME_POSITION_DEG)
-    input("Press enter to continue...:")
+    #input("Press enter to continue...:")
+    time.sleep(5)
     motor1_z.move_deg(Z_AXIS_PICKUP_DEG)
-    input("Press enter to continue...:")
+    #input("Press enter to continue...:")
+    time.sleep(6)
     control_magnet('ON')
-    input("Press enter to continue...:")
+    #input("Press enter to continue...:")
     motor1_z.set_deg(Z_AXIS_HOME_POSITION_DEG)
-    input("Press enter to continue...:")
+    time.sleep(5)
+    #input("Press enter to continue...:")
 
+    
     move_y_one_cell('FORWARD')
     move_y_one_cell('FORWARD')
-    adjustment(motor1_y, motor2_y, 'BACKWARD', 800, 1)
+    adjustment(motor1_y, motor2_y, 'BACKWARD', 1100, 2)
+    
     lift_motor_1.move_deg(LIFT_UP_ANGLE)
     lift_motor_2.move_deg(LIFT_UP_ANGLE)
+    
     move_x_one_cell('FORWARD')
+    adjustment(motor1_x, motor2_x, 'FORWARD', 350, 1)
+    
+    lift_motor_1.move_deg(LIFT_DOWN_ANGLE)
+    lift_motor_2.move_deg(LIFT_DOWN_ANGLE)
+    
+    motor1_z.move_deg(Z_AXIS_PICKUP_DEG)
+    time.sleep(5)
+    control_magnet('OFF')
+    motor1_z.set_deg(Z_AXIS_HOME_POSITION_DEG)
+    time.sleep(5)
+
+    move_y_one_cell('BACKWARD')
+    move_y_one_cell('BACKWARD')
+    adjustment(motor1_y, motor2_y, 'BACKWARD', 300, 2)
+
+    lift_motor_1.move_deg(LIFT_UP_ANGLE) 
+    lift_motor_2.move_deg(LIFT_UP_ANGLE)
+    
+    move_x_one_cell('BACKWARD')
+    adjustment(motor1_x, motor2_x, 'FORWARD', 900, 1)
+
+    
+    lift_motor_1.move_deg(LIFT_DOWN_ANGLE)
+    lift_motor_2.move_deg(LIFT_DOWN_ANGLE)
+
     # control_servos('LIFT')
     # move_x_one_cell('FORWARD')
     # adjustment(motor1_x, motor2_x, 'FORWARD', 500)

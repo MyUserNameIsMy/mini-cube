@@ -16,7 +16,7 @@ MAGNET_PIN = 6
 # --- Lift Motor Angles (in degrees) ---
 LIFT_UP_ANGLE = 2060
 LIFT_DOWN_ANGLE = -2060
-Z_AXIS_HOME_POSITION_DEG = 18000
+Z_AXIS_HOME_POSITION_DEG = 18500
 Z_AXIS_PICKUP_DEG = -14000  # Relative movement for pickup/place
 
 # === Motor Initialization ===

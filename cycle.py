@@ -46,6 +46,7 @@ class RobotController:
         # Robot's current position (using 0-based indexing: 0, 1, 2)
         self.current_pos = start_pos
         self.setup_hardware()
+        self.lift_wall = 'UP'
 
     def setup_hardware(self):
         """Initializes GPIO and motor settings."""
@@ -100,6 +101,13 @@ class RobotController:
     def _move_along_axis(self, axis, direction):
         """Generic internal function to move one cell along X or Y."""
         print(f"--> Moving one cell {direction} along {axis.upper()}-axis")
+        if direction == 'x':
+            self.lift_gantry('DOWN')
+            self.lift_wall = 'DOWN'
+        else:
+            self.lift_gantry('UP')
+            self.lift_wall = 'UP'
+
         m1 = self.motors[f'{axis}1']
         m2 = self.motors[f'{axis}2']
         if axis == 'x':

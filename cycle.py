@@ -101,12 +101,12 @@ class RobotController:
     def _move_along_axis(self, axis, direction):
         """Generic internal function to move one cell along X or Y."""
         print(f"--> Moving one cell {direction} along {axis.upper()}-axis")
-        if direction == 'x' and self.lift_wall == 'UP':
-            self.lift_gantry('DOWN')
-            self.lift_wall = 'DOWN'
-        elif  direction == 'y' and self.lift_wall == 'DOWN':
+        if direction == 'x' and self.lift_wall == 'DOWN':
             self.lift_gantry('UP')
             self.lift_wall = 'UP'
+        elif  direction == 'y' and self.lift_wall == 'UP':
+            self.lift_gantry('DOWN')
+            self.lift_wall = 'DOWN'
 
         m1 = self.motors[f'{axis}1']
         m2 = self.motors[f'{axis}2']

@@ -102,10 +102,24 @@ class RobotController:
         print(f"--> Moving one cell {direction} along {axis.upper()}-axis")
         m1 = self.motors[f'{axis}1']
         m2 = self.motors[f'{axis}2']
-        hall_pin = HALL_X_PINS['right'] if axis == 'x' else HALL_Y_PINS['front']  # Simplified for example
+        if axis == 'x':
+            if direction == 'FORWARD':
+                hall_pin = HALL_X_PINS['left']
+            else:
+                hall_pin = HALL_Y_PINS['right']
+        else:
+            if direction == 'FORWARD':
+                hall_pin = HALL_Y_PINS['back']
+            else:
+                hall_pin = HALL_X_PINS['front']
 
-        m1.set_mode('VELOCITY_MODE')
-        m2.set_mode('VELOCITY_MODE')
+
+        if axis == 'x':
+            m1.set_mode('WHEEL_MODE')
+            m2.set_mode('WHEEL_MODE')
+        else:
+            m1.set_mode('VELOCITY_MODE')
+            m2.set_mode('VELOCITY_MODE')
         time.sleep(0.05)
 
         if direction == 'FORWARD':

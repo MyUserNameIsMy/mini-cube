@@ -17,7 +17,7 @@ MAGNET_PIN = 6
 LIFT_UP_ANGLE = 2060
 LIFT_DOWN_ANGLE = -2060
 Z_AXIS_HOME_POSITION_DEG = 18500
-Z_AXIS_PICKUP_DEG = -14000  # Relative movement for pickup/place
+Z_AXIS_PICKUP_DEG = -14500  # Relative movement for pickup/place
 
 # === Motor Initialization ===
 # In a real scenario, these lines would initialize the actual motors.

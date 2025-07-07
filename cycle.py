@@ -129,10 +129,10 @@ class RobotController:
         print(f"-> Navigating from {self.current_pos} to ({target_x}, {target_y})")
         # Move along Y-axis
         while self.current_pos['y'] < target_y:
-            self._move_along_axis('y', 'FORWARD')
+            self._move_along_axis('y', 'BACKWARD')
             self.current_pos['y'] += 1
         while self.current_pos['y'] > target_y:
-            self._move_along_axis('y', 'BACKWARD')
+            self._move_along_axis('y', 'FORWARD')
             self.current_pos['y'] -= 1
 
         # Move along X-axis

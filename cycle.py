@@ -138,6 +138,26 @@ class RobotController:
         m2.stop_move()
         time.sleep(0.5)
 
+        if axis == 'y' and direction == 'FORWARD':
+            m1.set_mode('EXTENDED_POSITION_MODE')
+            m2.set_mode('EXTENDED_POSITION_MODE')
+            time.sleep(0.05)
+            m1.move_deg(-3100)
+            m2.move_deg(3100)
+            time.sleep(1)
+            m1.stop_move()
+            m2.stop_move()
+
+        if axis == 'x' and direction == 'BACKWARD':
+            m1.set_mode('MULTI_TURN_MODE')
+            m2.set_mode('MULTI_TURN_MODE')
+            time.sleep(0.05)
+            m1.move_deg(1750)
+            m2.move_deg(-1750)
+            time.sleep(1)
+            m1.stop_move()
+            m2.stop_move()
+
     def go_to(self, target_x, target_y):
         """Moves the robot from its current position to a target grid cell."""
         print(f"-> Navigating from {self.current_pos} to ({target_x}, {target_y})")

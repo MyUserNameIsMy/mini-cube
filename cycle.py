@@ -117,12 +117,12 @@ class RobotController:
             if direction == 'FORWARD':
                 hall_pin = HALL_X_PINS['left']
             else:
-                hall_pin = HALL_Y_PINS['right']
+                hall_pin = HALL_X_PINS['right']
         else:
             if direction == 'FORWARD':
                 hall_pin = HALL_Y_PINS['back']
             else:
-                hall_pin = HALL_X_PINS['front']
+                hall_pin = HALL_Y_PINS['front']
 
         if axis == 'x':
             m1.set_mode('WHEEL_MODE')

@@ -14,8 +14,8 @@ HALL_X_PINS = {'left': 5, 'right': 8}
 MAGNET_PIN = 6
 
 # --- Lift Motor Angles (in degrees) ---
-LIFT_UP_ANGLE = 2060
-LIFT_DOWN_ANGLE = -2060
+LIFT_UP_ANGLE = 2100
+LIFT_DOWN_ANGLE = -2100
 Z_AXIS_HOME_POSITION_DEG = 19000
 Z_AXIS_PICKUP_DEG = -14000  # Relative movement for pickup/place
 
@@ -152,8 +152,18 @@ class RobotController:
             m1.set_mode('EXTENDED_POSITION_MODE')
             m2.set_mode('EXTENDED_POSITION_MODE')
             time.sleep(0.05)
-            m1.move_deg(-3200)
-            m2.move_deg(3200)
+            m1.move_deg(-3250)
+            m2.move_deg(3250)
+            time.sleep(1)
+            m1.stop_move()
+            m2.stop_move()
+
+        if axis == 'y' and direction == 'BACKWARD':
+            m1.set_mode('EXTENDED_POSITION_MODE')
+            m2.set_mode('EXTENDED_POSITION_MODE')
+            time.sleep(0.05)
+            m1.move_deg(600)
+            m2.move_deg(-600)
             time.sleep(1)
             m1.stop_move()
             m2.stop_move()
@@ -162,8 +172,17 @@ class RobotController:
             m1.set_mode('MULTI_TURN_MODE')
             m2.set_mode('MULTI_TURN_MODE')
             time.sleep(0.05)
-            m1.move_deg(1750)
-            m2.move_deg(-1750)
+            m1.move_deg(2100)
+            m2.move_deg(-2100)
+            time.sleep(1)
+            m1.stop_move()
+            m2.stop_move()
+        if axis == 'x' and direction == 'FORWARD':
+            m1.set_mode('MULTI_TURN_MODE')
+            m2.set_mode('MULTI_TURN_MODE')
+            time.sleep(0.05)
+            m1.move_deg(-400)
+            m2.move_deg(400)
             time.sleep(1)
             m1.stop_move()
             m2.stop_move()

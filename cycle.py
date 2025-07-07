@@ -14,8 +14,8 @@ HALL_X_PINS = {'left': 5, 'right': 8}
 MAGNET_PIN = 6
 
 # --- Lift Motor Angles (in degrees) ---
-LIFT_UP_ANGLE = 2100
-LIFT_DOWN_ANGLE = -2100
+LIFT_UP_ANGLE = 2150
+LIFT_DOWN_ANGLE = -2150
 Z_AXIS_HOME_POSITION_DEG = 19000
 Z_AXIS_PICKUP_DEG = -14000  # Relative movement for pickup/place
 
@@ -172,8 +172,8 @@ class RobotController:
             m1.set_mode('MULTI_TURN_MODE')
             m2.set_mode('MULTI_TURN_MODE')
             time.sleep(0.05)
-            m1.move_deg(2100)
-            m2.move_deg(-2100)
+            m1.move_deg(3200)
+            m2.move_deg(-3200)
             time.sleep(1)
             m1.stop_move()
             m2.stop_move()

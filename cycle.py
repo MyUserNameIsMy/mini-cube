@@ -46,7 +46,7 @@ class RobotController:
         # Robot's current position (using 0-based indexing: 0, 1, 2)
         self.current_pos = start_pos
         self.setup_hardware()
-        self.lift_wall = 'UP'
+        self.lift_wall = 'DOWN'
 
     def setup_hardware(self):
         """Initializes GPIO and motor settings."""

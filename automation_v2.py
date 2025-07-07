@@ -9,18 +9,20 @@ from minicubebase import MotorV1, MotorV2
 # === Configuration ===
 # --- Port and Pin Definitions ---
 DEVICE_NAME = '/dev/ttyUSB0'
-HALL_Y = 4
-HALL_X = 5
+HALL_Y_1 = 4
+HALL_X_1 = 5
+HALL_Y_2 = 7
+HALL_X_2 = 8
 MAGNET_PIN = 6
 
 # --- Lift Motor Angles (in degrees) ---
 # Adjust these values to fine-tune the lift mechanism.
 # In MULTI_TURN_MODE, you can use values greater than 360.
-LIFT_UP_ANGLE = 2048
-LIFT_DOWN_ANGLE = -2048
+LIFT_UP_ANGLE = 2060
+LIFT_DOWN_ANGLE = -2060
 
 
-Z_AXIS_HOME_POSITION_DEG = 16000
+Z_AXIS_HOME_POSITION_DEG = 18000
 Z_AXIS_PICKUP_DEG = -14000
 
 
@@ -43,11 +45,15 @@ motor2_y.set_speed(1000)
 
 
 # === Setup ===
-# GPIO setup for the magnet
+# GPIO setup for the magneta
+GPIO.cleanup()
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(MAGNET_PIN, GPIO.OUT, initial=GPIO.LOW)
-GPIO.setup(HALL_Y, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-GPIO.setup(HALL_X, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+GPIO.setup(HALL_Y_1, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+GPIO.setup(HALL_X_1, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+GPIO.setup(HALL_Y_2, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+GPIO.setup(HALL_X_2, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+
 
 # Consolidate all motors
 motors = [motor1_z, motor1_x, motor1_y, motor2_x, motor2_y, lift_motor_1, lift_motor_2]
@@ -108,6 +114,7 @@ def move_y_one_cell(direction, move_further=True):
         motor2_y.move_backward()
 
     time.sleep(1.5)
+    HALL_Y = HALL_Y_2 if direction == 'FORWARD' else HALL_Y_1
     while GPIO.input(HALL_Y) == GPIO.HIGH: time.sleep(0.05)
 
     motor1_y.stop_move()
@@ -133,7 +140,7 @@ def move_x_one_cell(direction, move_further=True):
     motor1_x.set_mode('WHEEL_MODE')
     motor2_x.set_mode('WHEEL_MODE')
     time.sleep(0.05)
-
+    sleep_time = 1.5 if direction == 'FORWARD' else 0.5
     if direction == 'FORWARD':
         motor1_x.move_backward()
         motor2_x.move_forward()
@@ -141,7 +148,9 @@ def move_x_one_cell(direction, move_further=True):
         motor1_x.move_forward()
         motor2_x.move_backward()
 
-    time.sleep(1.5)
+    print('DEBUG SLEEP TIME ', sleep_time)
+    time.sleep(sleep_time)
+    HALL_X = HALL_X_1 if direction == 'FORWARD' else HALL_X_2
     while GPIO.input(HALL_X) == GPIO.HIGH: time.sleep(0.05)
 
     motor1_x.stop_move()
@@ -155,7 +164,7 @@ def move_x_one_cell(direction, move_further=True):
             motor1_x.move_forward()
             motor2_x.move_backward()
 
-        while GPIO.input(HALL_Y) == GPIO.LOW: time.sleep(0.05)
+        while GPIO.input(HALL_X) == GPIO.LOW: time.sleep(0.05)
 
         motor1_x.stop_move()
         motor2_x.stop_move()
@@ -185,7 +194,7 @@ def main_sequence():
     time.sleep(5)
     motor1_z.move_deg(Z_AXIS_PICKUP_DEG)
     #input("Press enter to continue...:")
-    time.sleep(6)
+    input("PRESS ENTER TO CONTINUE")
     control_magnet('ON')
     #input("Press enter to continue...:")
     motor1_z.set_deg(Z_AXIS_HOME_POSITION_DEG)
@@ -195,13 +204,13 @@ def main_sequence():
     
     move_y_one_cell('FORWARD')
     move_y_one_cell('FORWARD')
-    adjustment(motor1_y, motor2_y, 'BACKWARD', 1100, 2)
+    adjustment(motor1_y, motor2_y, 'FORWARD', 3100, 2)
     
     lift_motor_1.move_deg(LIFT_UP_ANGLE)
     lift_motor_2.move_deg(LIFT_UP_ANGLE)
     
     move_x_one_cell('FORWARD')
-    adjustment(motor1_x, motor2_x, 'FORWARD', 350, 1)
+   
     
     lift_motor_1.move_deg(LIFT_DOWN_ANGLE)
     lift_motor_2.move_deg(LIFT_DOWN_ANGLE)
@@ -214,13 +223,13 @@ def main_sequence():
 
     move_y_one_cell('BACKWARD')
     move_y_one_cell('BACKWARD')
-    adjustment(motor1_y, motor2_y, 'BACKWARD', 300, 2)
+    
 
     lift_motor_1.move_deg(LIFT_UP_ANGLE) 
     lift_motor_2.move_deg(LIFT_UP_ANGLE)
     
     move_x_one_cell('BACKWARD')
-    adjustment(motor1_x, motor2_x, 'FORWARD', 900, 1)
+    adjustment(motor1_x, motor2_x, 'BACKWARD', 1750, 1)
 
     
     lift_motor_1.move_deg(LIFT_DOWN_ANGLE)

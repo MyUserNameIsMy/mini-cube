@@ -1,7 +1,7 @@
 import RPi.GPIO as GPIO
 import time
 
-HALL_SENSOR_PIN = 5
+HALL_SENSOR_PIN = 7
 
 try:
     # Set the GPIO mode and setup the pin

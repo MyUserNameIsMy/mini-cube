@@ -6,6 +6,8 @@ import time
 import RPi.GPIO as GPIO
 from minicubebase import MotorV1, MotorV2
 
+# === Configuration ===
+# --- Port and Pin Definitions ---
 DEVICE_NAME = '/dev/ttyUSB0'
 HALL_Y_PINS = {'front': 4, 'back': 7}
 HALL_X_PINS = {'left': 5, 'right': 8}
@@ -38,11 +40,11 @@ all_motors = {
 class RobotController:
     """Manages the robot's state and high-level actions."""
 
-    def __init__(self, motors, initial_grid):
+    def __init__(self, motors, initial_grid, start_pos):
         self.motors = motors
-        self.grid = initial_grid
+        self.grid = [row[:] for row in initial_grid]  # Create a copy
         # Robot's current position (using 0-based indexing: 0, 1, 2)
-        self.current_pos = {'x': 0, 'y': 0}
+        self.current_pos = start_pos
         self.setup_hardware()
 
     def setup_hardware(self):
@@ -217,33 +219,39 @@ def solve_puzzle():
     This function defines the high-level logic to solve the puzzle.
     It uses the RobotController to abstract away the complex movements.
     """
-    # Define the initial state of the grid (0-based index: [row][column])
-    # grid[y][x] -> grid[row][col]
+    # --- UPDATED: Grid state to match the user's diagram ---
+    # Coordinate system: grid[y][x] where (0,0) is TOP-LEFT
     initial_grid = [
-        [1, 0, 0],  # Row 0: Box at (0,0) which is "11"
+        [0, 0, 3],  # Row 0: 3 boxes at (x=2, y=0) -> "33" in user's diagram
         [0, 0, 0],  # Row 1
-        [0, 0, 3]  # Row 2: 3 boxes at (2,2) which is "33"
+        [1, 0, 0]  # Row 2: 1 box at (x=0, y=2) -> "11" in user's diagram
     ]
 
-    # Define key locations
-    pos_11 = (0, 0)
-    pos_13 = (2, 0)  # (col, row) -> (x,y)
-    pos_33 = (2, 2)
-    pos_23 = (2, 1)  # Temporary holding spot
+    # --- UPDATED: Key locations based on diagram ---
+    # (x, y) coordinates based on a 0-indexed grid
+    pos_11 = (0, 2)  # Bottom-Left
+    pos_33 = (2, 0)  # Top-Right
+    pos_13 = (0, 0)  # Top-Left (as per user instruction "move 11 to 13")
 
-    # Initialize the controller
-    robot = RobotController(all_motors, initial_grid)
+    # Define a temporary holding spot for unstacking. (x=1, y=0) is Top-Middle.
+    temp_pos_for_33 = (1, 0)
+
+    # --- UPDATED: Robot's starting position ---
+    start_pos = {'x': 0, 'y': 2}  # Start at "11" (bottom-left)
+
+    # Initialize the controller with the new configuration
+    robot = RobotController(all_motors, initial_grid, start_pos)
 
     try:
         input("Press ENTER to begin the puzzle sequence...")
 
-        # Your sequence, translated into clear actions:
+        # Your sequence, translated into clear actions with the correct coordinates:
         # 1. "move 11 box to 13"
         robot.move_box(from_pos=pos_11, to_pos=pos_13)
 
         # 2. "get last box from grid 33 and move it to 11"
         # This requires unstacking the top two boxes first.
-        robot.unstack_and_move_bottom_box(stack_pos=pos_33, target_pos=pos_11, temp_pos=pos_23)
+        robot.unstack_and_move_bottom_box(stack_pos=pos_33, target_pos=pos_11, temp_pos=temp_pos_for_33)
 
         # 3. "and then 11 to 33"
         robot.move_box(from_pos=pos_11, to_pos=pos_33)

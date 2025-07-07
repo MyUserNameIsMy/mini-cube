@@ -16,8 +16,8 @@ MAGNET_PIN = 6
 # --- Lift Motor Angles (in degrees) ---
 LIFT_UP_ANGLE = 2060
 LIFT_DOWN_ANGLE = -2060
-Z_AXIS_HOME_POSITION_DEG = 18500
-Z_AXIS_PICKUP_DEG = -14500  # Relative movement for pickup/place
+Z_AXIS_HOME_POSITION_DEG = 19000
+Z_AXIS_PICKUP_DEG = -14000  # Relative movement for pickup/place
 
 # === Motor Initialization ===
 # In a real scenario, these lines would initialize the actual motors.
@@ -102,11 +102,11 @@ class RobotController:
         """Generic internal function to move one cell along X or Y."""
         print(f"--> Moving one cell {direction} along {axis.upper()}-axis current lift_wall {self.lift_wall}")
 
-        if direction == 'x' and self.lift_wall == 'DOWN':
+        if axis == 'x' and self.lift_wall == 'DOWN':
             print('-->lift gantry UP')
             self.lift_gantry('UP')
             self.lift_wall = 'UP'
-        elif  direction == 'y' and self.lift_wall == 'UP':
+        elif axis == 'y' and self.lift_wall == 'UP':
             print('-->lift gantry UP')
             self.lift_gantry('DOWN')
             self.lift_wall = 'DOWN'
@@ -123,7 +123,6 @@ class RobotController:
                 hall_pin = HALL_Y_PINS['back']
             else:
                 hall_pin = HALL_X_PINS['front']
-
 
         if axis == 'x':
             m1.set_mode('WHEEL_MODE')
@@ -153,8 +152,8 @@ class RobotController:
             m1.set_mode('EXTENDED_POSITION_MODE')
             m2.set_mode('EXTENDED_POSITION_MODE')
             time.sleep(0.05)
-            m1.move_deg(-3100)
-            m2.move_deg(3100)
+            m1.move_deg(-3200)
+            m2.move_deg(3200)
             time.sleep(1)
             m1.stop_move()
             m2.stop_move()
